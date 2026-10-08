@@ -194,8 +194,11 @@
   }
 
   .hero-globe{
-    flex:0 0 auto;
-    width:min(24vw,320px);
+    --globe:min(34vw,500px);
+    position:absolute;
+    left:max(560px,min(50%,720px));
+    top:calc(50% - var(--globe) / 2 + 50px);
+    width:var(--globe);
     display:flex;
     flex-direction:column;
     align-items:center;
