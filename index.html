@@ -113,6 +113,11 @@
     mix-blend-mode:screen;
     animation:grainFlicker 0.8s steps(8) infinite;
   }
+  /* phones: a full-screen blended, animated grain layer over the 3D tunnel is the biggest frame cost */
+  @media(max-width:900px), (hover:none){
+    .grain-overlay{display:none;}
+    .reg-strip, .contact-divider{animation:none;}
+  }
   @keyframes grainFlicker{
     0%,100%{background-position:0 0;}
     10%{background-position:-4% -8%;}
@@ -134,12 +139,11 @@
     padding:30px 0;z-index:200;background:var(--bg);
   }
   .side-logo{
-    width:34px;height:34px;border:1px solid var(--line);border-radius:50%;
+    width:34px;height:34px;color:var(--ink);
     display:flex;align-items:center;justify-content:center;
-    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.75rem;
-    transition:border-color .25s ease, color .25s ease;
+    transition:color .25s ease, transform .25s ease;
   }
-  .side-logo:hover{border-color:var(--cobalt);color:var(--cobalt);}
+  .side-logo:hover{color:var(--cobalt);transform:translateY(-1px);}
   .side-nav{display:flex;flex-direction:column;align-items:center;gap:30px;}
   .side-nav a{
     font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;
@@ -360,8 +364,6 @@
     .hero h1.morph-text{filter:none;height:auto;}
     .morph-text span{position:static;white-space:normal;}
   }
-  .hero-intro{padding:140px 60px 120px;}
-  @media(max-width:900px){.hero-intro{padding:90px 24px 70px;}}
 
   .tunnel-prompt{
     position:absolute;bottom:32px;left:0;right:0;z-index:20;pointer-events:none;
@@ -398,17 +400,6 @@
     .tunnel-card-label span{font-size:0.62rem;}
   }
 
-  .hero-intro .sub{
-    margin:0 auto;max-width:48rem;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;
-    font-size:clamp(1.5rem,2.8vw,2.5rem);line-height:1.2;letter-spacing:-0.02em;color:var(--ink);
-  }
-  /* text reveal, "fade-in-blur" preset: each word rises out of a blur, staggered */
-  .hero-intro .sub .w{
-    display:inline-block;white-space:pre;opacity:0;filter:blur(12px);transform:translateY(20px);
-    transition:opacity .3s ease,filter .3s ease,transform .3s ease;transition-delay:calc(var(--i) * 0.042s);
-  }
-  .hero-intro .sub.revealed .w{opacity:1;filter:blur(0);transform:none;}
-  @media (prefers-reduced-motion: reduce){.hero-intro .sub .w{opacity:1;filter:none;transform:none;transition:none;}}
   /* liquid glass buttons: transparent pill lit by inset rim highlights */
   .btn, .btn-light, .tag-pill{
     appearance:none;-webkit-appearance:none;margin:0;
@@ -468,7 +459,7 @@
   }
   .float-cta:hover{color:var(--cobalt);}
   .float-cta.is-hidden{opacity:0;pointer-events:none;}
-  @media(max-width:900px){.float-cta{left:16px;bottom:16px;padding:14px 22px;}}
+  @media(max-width:900px){.float-cta{left:16px;bottom:16px;padding:14px 22px;background:rgba(12,12,12,0.92);-webkit-backdrop-filter:none;backdrop-filter:none;}}
   .work-hint{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.04em;color:var(--ink-soft);margin-top:12px;text-transform:none;}
 
   section{padding:100px 60px;position:relative;}
@@ -784,7 +775,7 @@
 <div class="reg-strip" aria-hidden="true"></div>
 
 <aside class="sidebar">
-  <a href="#top" class="side-logo">PJ</a>
+  <a href="#" class="side-logo" aria-label="Home"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/></svg></a>
   <nav class="side-nav" id="sideNav">
     <a href="#work">Work</a>
     <a href="#about">About</a>
@@ -812,11 +803,6 @@
       <div class="tunnel-prompt mono" aria-hidden="true"><span>Scroll to explore</span><i></i></div>
       <div class="tunnel-space" id="tunnelSpace"></div>
     </div>
-  </section>
-
-  <!-- INTRO -->
-  <section class="hero-intro">
-    <p class="sub">I'm Presley Jackson— I design brands people remember, ads that get attention, merch people wear, and content that keeps businesses moving. Whatever the medium, the goal is always the same—create work that makes an impact...</p>
   </section>
 
   <!-- WORK -->
@@ -2042,23 +2028,6 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
 })();
 </script>
 <script>
-/* ---------- intro statement: text reveal (fade-in-blur, per word) when it scrolls into view ---------- */
-(function(){
-  const p = document.querySelector('.hero-intro .sub');
-  if(!p) return;
-  const text = p.textContent.trim();
-  p.setAttribute('aria-label', text);
-  let n = 0;
-  p.innerHTML = text.split(/(\s+)/).map(t => /^\s+$/.test(t) ? t : `<span class="w" aria-hidden="true" style="--i:${n++}">${t.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`).join('');
-  const io = new IntersectionObserver(([e]) => {
-    if(!e.isIntersecting) return;
-    p.classList.add('revealed');
-    io.disconnect();
-  }, { threshold: 0.35 });
-  io.observe(p);
-})();
-</script>
-<script>
 /* ---------- floating "Start a project": steps aside where the contact form already is ---------- */
 (function(){
   const cta = document.getElementById('floatCta');
@@ -2116,10 +2085,19 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     if(fraction === 1) index++;
   };
 
+  const holder = root.closest('.tunnel-title');
+  let wasPaused = false;
+  const pausedNow = () => {
+    const paused = !!holder && holder.hasAttribute('data-paused');
+    // pausing mid-dissolve would freeze a blob: settle on the incoming phrase first
+    if(paused && !wasPaused && cooldown <= 0){ index++; doCooldown(); cooldown = cooldownTime; }
+    wasPaused = paused;
+    return paused;
+  };
   setStyles(0);
   const animate = (now) => {
     requestAnimationFrame(animate);
-    if(!inView || document.visibilityState === 'hidden'){ last = now; return; }
+    if(!inView || document.visibilityState === 'hidden' || pausedNow()){ last = now; return; }
     const dt = (now - last) / 1000;
     last = now;
     cooldown -= dt;
@@ -2144,6 +2122,19 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     ['ledger-budgeting-app', 4], ['hollow-and-rind-skincare', 6], ['basin-studio-reel-kit', 1],
     ['field-notes-quarterly', 7], ['northline-coffee-co', 4], ['basin-studio-reel-kit', 2],
   ];
+  const shrink = (src, max) => new Promise((resolve) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+      if(k >= 1) return resolve(null);
+      const c = document.createElement('canvas');
+      c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(im, 0, 0, c.width, c.height);
+      c.toBlob(b => resolve(b ? URL.createObjectURL(b) : null), 'image/webp', 0.85);
+    };
+    im.onerror = () => resolve(null);
+    im.src = src;
+  });
   const projectName = (p) => {
     const h = document.querySelector(`.work-row[data-project="${p}"] h3`);
     return h ? h.textContent : '';
@@ -2156,7 +2147,11 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     el.style.zIndex = i + 1;
     const name = projectName(project);
     el.innerHTML = `<div class="tunnel-card-inner"><img alt="" draggable="false"><div class="tunnel-card-label"><span></span></div></div>`;
-    el.querySelector('img').src = DEFAULT_IMAGES[project][imgIdx];
+    const img = el.querySelector('img');
+    img.decoding = 'async';
+    img.src = DEFAULT_IMAGES[project][imgIdx];
+    // cards are at most ~270px wide: swap the 1400px original for a small copy, far lighter to move in 3D
+    shrink(DEFAULT_IMAGES[project][imgIdx], 640).then(url => { if(url) img.src = url; });
     el.querySelector('img').alt = name;
     el.querySelector('span').textContent = name;
     el.addEventListener('click', () => {
@@ -2189,23 +2184,32 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let w = 0, h = 0, mobile = false;
-  const measure = () => { w = stage.clientWidth; h = stage.clientHeight; mobile = window.innerWidth < 768; };
-  measure();
-  window.addEventListener('resize', measure);
+  // geometry is read only on resize, never in the scroll path
+  let sectionTop = 0, stickyTop = 0, travel = 0, cardW = 0;
+  const measure = () => {
+    w = stage.clientWidth; h = stage.clientHeight; mobile = window.innerWidth < 768;
+    sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    stickyTop = parseFloat(getComputedStyle(stage).top) || 0;
+    travel = section.offsetHeight - stage.offsetHeight;
+    cardW = mobile ? Math.max(130, Math.min(180, w * 0.38)) : Math.max(180, Math.min(270, w * 0.18));
+    cards.forEach(c => { c.el.style.width = cardW + 'px'; });
+    readScroll();
+    kick();
+  };
 
   const readScroll = () => {
-    const top = parseFloat(getComputedStyle(stage).top) || 0;
-    const travel = section.offsetHeight - stage.offsetHeight;
-    progress.target = travel > 0 ? Math.min(1, Math.max(0, (top - section.getBoundingClientRect().top) / travel)) : 0;
+    progress.target = travel > 0 ? Math.min(1, Math.max(0, (window.scrollY + stickyTop - sectionTop) / travel)) : 0;
+    kick();
   };
   window.addEventListener('scroll', readScroll, { passive: true });
-  readScroll();
   if(reduce) progress.x = progress.target;
 
   if(!reduce){
     window.addEventListener('pointermove', (e) => {
+      if(e.pointerType === 'touch') return;
       px.target = (e.clientX / window.innerWidth - 0.5) * 2;
       py.target = (e.clientY / window.innerHeight - 0.5) * 2;
+      kick();
     }, { passive: true });
   }
 
@@ -2214,7 +2218,6 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     const total = cards.length;
     const span = 0.55;
     const farZ = mobile ? -1200 : -1700, nearZ = mobile ? 350 : 500;
-    const cardW = mobile ? Math.max(130, Math.min(180, w * 0.38)) : Math.max(180, Math.min(270, w * 0.18));
     const pan = mobile ? 20 : 45;
     for(const c of cards){
       const start = (c.index / total) * (1 - span);
@@ -2222,9 +2225,10 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
       const z = farZ + (nearZ - farZ) * local;
       const x = c.cos * w * c.rfx - px.x * pan;
       const y = c.sin * h * c.rfy - py.x * pan;
-      c.el.style.width = cardW + 'px';
+      const show = local > 0 && local < 0.98;
+      if(show !== c.shown){ c.shown = show; c.el.style.visibility = show ? 'visible' : 'hidden'; }
+      if(!show) continue;
       c.el.style.opacity = map(local, [0, 0.18, 0.82, 0.98], [0, 1, 1, 0]);
-      c.el.style.visibility = local <= 0 || local >= 0.98 ? 'hidden' : 'visible';
       c.el.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), ${z}px) rotateZ(${c.rotZ}deg)`;
     }
     // the headline starts fully readable, then grows and fades as you fly past it
@@ -2232,23 +2236,30 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     title.style.opacity = tOpacity;
     title.style.visibility = tOpacity < 0.02 ? 'hidden' : 'visible';
     title.style.transform = `scale(${map(p, [0, 1], [1, 1.3])})`;
+    // freeze the morphing headline once the flight starts: its filter is costly to redraw while it scales
+    title.toggleAttribute('data-paused', p > 0.02);
     if(prompt) prompt.style.opacity = map(p, [0, 0.12], [1, 0]);
   }
 
-  let onScreen = true, last = performance.now();
-  new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(stage);
+  // frames run only while something is still moving; at rest the tunnel costs nothing
+  let onScreen = true, last = 0, raf = 0;
+  const settled = (sp) => Math.abs(sp.target - sp.x) < 0.0002 && Math.abs(sp.v) < 0.0002;
   function frame(now){
-    const dt = Math.min(1 / 30, (now - last) / 1000);
+    raf = 0;
+    const dt = last ? Math.min(1 / 30, (now - last) / 1000) : 1 / 60;
     last = now;
-    if(onScreen){
-      if(reduce) progress.x = progress.target;
-      else { stepSpring(progress, dt); stepSpring(px, dt); stepSpring(py, dt); }
-      render();
-    }
-    requestAnimationFrame(frame);
+    if(!onScreen){ last = 0; return; }
+    if(reduce) progress.x = progress.target;
+    else { stepSpring(progress, dt); stepSpring(px, dt); stepSpring(py, dt); }
+    render();
+    if(reduce || (settled(progress) && settled(px) && settled(py))){ last = 0; return; }
+    raf = requestAnimationFrame(frame);
   }
+  function kick(){ if(!raf && onScreen) raf = requestAnimationFrame(frame); }
+  new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; if(onScreen) kick(); }).observe(stage);
+  window.addEventListener('resize', measure);
+  measure();
   render();
-  requestAnimationFrame(frame);
 })();
 </script>
 
