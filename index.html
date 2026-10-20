@@ -89,6 +89,7 @@
     background:linear-gradient(90deg,var(--cobalt),var(--red),var(--yellow),var(--mint),var(--violet),var(--coral),var(--cobalt));
     background-size:300% 100%;
     animation:stripShift 8s linear infinite;
+    filter:grayscale(1);
   }
   @keyframes stripShift{
     0%{background-position:0% 50%;}
@@ -518,7 +519,6 @@
   @media(max-width:480px){
     .modal-close{width:44px;height:44px;top:14px;right:14px;}
     .modal-head{padding-right:56px;}
-    .modal-gallery{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
   }
   .modal-close{
     position:absolute;top:22px;right:22px;width:38px;height:38px;border-radius:50%;
@@ -532,109 +532,59 @@
   .modal-cat{font-size:0.68rem;color:var(--ink-soft);margin-bottom:6px;}
   .modal-head h3{font-size:clamp(1.4rem,3.4vw,2rem);}
 
-  .modal-gallery{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:30px;
+  /* project view: morph gallery, slides dissolve into each other through noise */
+  .modal-overlay.morph-overlay{padding:0;background:#000;backdrop-filter:none;display:block;overflow:hidden;}
+  .morph-gallery{position:absolute;inset:0;outline:none;touch-action:pan-y;}
+  .morph-stage{position:absolute;left:0;right:0;top:104px;bottom:120px;}
+  .morph-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .4s ease;}
+  .morph-stage canvas.ready{opacity:1;}
+  .morph-fallback img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain;transition:opacity .7s ease;}
+  .morph-head{
+    position:absolute;top:0;left:0;right:0;z-index:10;
+    display:flex;align-items:center;gap:14px;padding:30px 50px 26px;
   }
-  .gallery-item{
-    position:relative;aspect-ratio:4/3;overflow:hidden;border:1px solid var(--line);background:#0a0a0a;
-    cursor:pointer;
-    opacity:0;transform:translateY(18px) scale(0.96);
-    animation:galleryIn .6s cubic-bezier(.16,.8,.24,1) forwards;
-  }
-  @keyframes galleryIn{to{opacity:1;transform:translateY(0) scale(1);}}
-  .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.16,.8,.24,1),filter .5s ease;}
-  .gallery-item:hover img{transform:scale(1.08);filter:brightness(1.05);}
-  .gallery-item::after{
-    content:'';position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(to top,rgba(0,0,0,0.35),rgba(0,0,0,0) 45%);
-    opacity:0;transition:opacity .3s ease;
-  }
-  .gallery-item:hover::after{opacity:1;}
-  .gallery-item .gallery-expand{
-    position:absolute;bottom:8px;right:8px;width:26px;height:26px;border-radius:50%;
-    border:1px solid rgba(255,255,255,0.35);background:rgba(0,0,0,0.55);color:var(--ink);
-    font-size:0.75rem;display:flex;align-items:center;justify-content:center;
-    opacity:0;transform:scale(0.7);transition:opacity .25s ease,transform .25s ease,border-color .25s ease;
-    pointer-events:none;
-  }
-  .gallery-item:hover .gallery-expand{opacity:1;transform:scale(1);}
-
-  /* project view: Behance-style vertical scroll, full-width images stacked */
-  .modal-overlay.project-overlay{padding:40px 24px 0;}
-  .project-panel{max-width:1400px;padding:0;border-bottom:none;}
-  .project-panel .modal-head{
-    position:sticky;top:-40px;z-index:2;margin:0;padding:30px 90px 26px 50px;
-    background:#000;border-bottom:1px solid var(--line);
-  }
-  .project-panel .modal-close{top:50%;transform:translateY(-50%);}
-  .project-panel .modal-close:hover{transform:translateY(-50%) rotate(90deg);}
-  .project-panel .modal-gallery{display:flex;flex-direction:column;gap:0;margin:0;}
-  .project-panel .gallery-item{aspect-ratio:auto;border:none;cursor:zoom-in;transform:translateY(24px);}
-  .project-panel .gallery-item img{height:auto;object-fit:initial;}
-  .project-panel .gallery-item:hover img{transform:none;filter:none;}
-  .project-panel .gallery-item::after{display:none;}
-  .project-panel .gallery-item .gallery-expand{bottom:16px;right:16px;width:34px;height:34px;font-size:0.9rem;}
-  .project-panel .modal-end{
-    padding:70px 50px 90px;text-align:center;border-top:1px solid var(--line);
-  }
-  .project-panel .modal-end h3{font-size:clamp(1.2rem,2.6vw,1.6rem);margin-bottom:22px;}
-  .project-panel .modal-end button{
+  .morph-head .modal-cat{margin-bottom:6px;}
+  .morph-head h3{font-size:clamp(1.3rem,3vw,1.9rem);}
+  .morph-count{margin-left:auto;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;color:var(--ink-soft);}
+  .morph-next{
     border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;
-    padding:12px 26px;border-radius:999px;font:inherit;font-size:0.8rem;letter-spacing:0.08em;
+    padding:11px 20px;border-radius:999px;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;
     transition:border-color .25s ease,color .25s ease;
   }
-  .project-panel .modal-end button:hover{border-color:var(--cobalt);color:var(--cobalt);}
+  .morph-next:hover{border-color:var(--cobalt);color:var(--cobalt);}
+  .morph-head .modal-close{position:static;flex-shrink:0;}
+  .morph-arrow{
+    position:absolute;top:50%;z-index:10;width:44px;height:44px;margin-top:-22px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;
+    border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s ease;
+  }
+  .morph-arrow:hover{background:rgba(255,255,255,0.25);}
+  .morph-arrow:focus-visible, .morph-thumbs button:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  .morph-prev{left:32px;} .morph-next-img{right:32px;}
+  .morph-thumbs{
+    position:absolute;left:0;right:0;bottom:28px;z-index:10;margin:0 auto;padding:0 0 10px;list-style:none;
+    display:flex;gap:8px;width:max-content;max-width:calc(100% - 32px);overflow-x:auto;scroll-behavior:smooth;
+  }
+  .morph-thumbs::-webkit-scrollbar{height:6px;}
+  .morph-thumbs::-webkit-scrollbar-track{border-radius:4px;background:rgba(255,255,255,0.1);}
+  .morph-thumbs::-webkit-scrollbar-thumb{border-radius:4px;background:rgba(255,255,255,0.3);}
+  .morph-thumbs li{flex-shrink:0;}
+  .morph-thumbs button{
+    display:block;padding:0;cursor:pointer;overflow:hidden;border-radius:4px;background:transparent;
+    border:2px solid transparent;opacity:0.55;transition:opacity .2s ease,border-color .2s ease;
+  }
+  .morph-thumbs button:hover{opacity:0.85;}
+  .morph-thumbs button[aria-current="true"]{border-color:#fff;opacity:1;}
+  .morph-thumbs img{display:block;width:80px;height:50px;max-width:none;object-fit:cover;}
+  .morph-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
   @media(max-width:640px){
-    .modal-overlay.project-overlay{padding:0;}
-    .project-panel{border:none;}
-    .project-panel .modal-head{top:0;padding:22px 70px 18px 22px;}
-    .project-panel .modal-close{right:14px;}
-    .project-panel .modal-end{padding:50px 22px 70px;}
-  }
-
-  /* ---------- LIGHTBOX ---------- */
-  .lightbox-overlay{
-    position:fixed;inset:0;background:rgba(5,6,9,0.35);
-    backdrop-filter:blur(38px) saturate(130%);
-    -webkit-backdrop-filter:blur(38px) saturate(130%);
-    display:flex;align-items:center;justify-content:center;
-    opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:1200;
-  }
-  .lightbox-overlay.open{opacity:1;pointer-events:auto;}
-  .lightbox-stage{
-    position:relative;width:100vw;height:100vh;
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
-  }
-  .lightbox-stage img{
-    position:absolute;max-width:96vw;max-height:94vh;object-fit:contain;display:block;
-  }
-  .lightbox-stage img.slide-in-next{animation:slideInNext .55s cubic-bezier(.19,1,.22,1) forwards;}
-  .lightbox-stage img.slide-in-prev{animation:slideInPrev .55s cubic-bezier(.19,1,.22,1) forwards;}
-  .lightbox-stage img.slide-out-next{animation:slideOutNext .55s cubic-bezier(.19,1,.22,1) forwards;}
-  .lightbox-stage img.slide-out-prev{animation:slideOutPrev .55s cubic-bezier(.19,1,.22,1) forwards;}
-  @keyframes slideInNext{from{transform:translateX(6%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-  @keyframes slideInPrev{from{transform:translateX(-6%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-  @keyframes slideOutNext{from{transform:translateX(0);opacity:1;}to{transform:translateX(-6%);opacity:0;}}
-  @keyframes slideOutPrev{from{transform:translateX(0);opacity:1;}to{transform:translateX(6%);opacity:0;}}
-  .lightbox-close, .lightbox-nav{
-    position:fixed;width:44px;height:44px;border-radius:50%;
-    border:1px solid var(--line);background:rgba(0,0,0,0.6);color:var(--ink);
-    font-size:1.1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:border-color .25s ease,color .25s ease,transform .25s ease;z-index:1210;
-  }
-  .lightbox-close{top:26px;right:26px;}
-  .lightbox-close:hover{border-color:var(--cobalt);color:var(--cobalt);transform:rotate(90deg);}
-  .lightbox-nav:hover{border-color:var(--cobalt);color:var(--cobalt);}
-  .lightbox-prev{left:26px;top:50%;transform:translateY(-50%);}
-  .lightbox-next{right:26px;top:50%;transform:translateY(-50%);}
-  .lightbox-prev:hover, .lightbox-next:hover{transform:translateY(-50%) scale(1.08);}
-  .lightbox-count{
-    position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
-    font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.05em;color:var(--ink-soft);z-index:1210;
-  }
-  @media(max-width:640px){
-    .lightbox-prev{left:10px;}.lightbox-next{right:10px;}
-    .lightbox-close{top:14px;right:14px;}
+    .morph-head{padding:20px 18px 16px;gap:10px;flex-wrap:wrap;}
+    .morph-count{order:3;margin-left:0;width:100%;}
+    .morph-next{padding:9px 14px;}
+    .morph-stage{top:150px;bottom:24px;}
+    .morph-thumbs{display:none;}
+    .morph-prev{left:12px;} .morph-next-img{right:12px;}
   }
 
   /* ---------- SKETCH IT OUT ---------- */
@@ -726,6 +676,7 @@
     background:linear-gradient(90deg,var(--cobalt),var(--red),var(--yellow),var(--mint),var(--violet),var(--coral),var(--cobalt));
     background-size:300% 100%;
     animation:stripShift 8s linear infinite;
+    filter:grayscale(1);
   }
   #contact{background:var(--bg);padding:110px 60px;}
   @media(max-width:900px){#contact{padding:70px 24px;}}
@@ -768,11 +719,11 @@
   /* ---------- FOOTER: halftone wordmark ---------- */
   .hwf-root{
     --hwf-bg:#0c0c0b;--hwf-ink:#e9e4da;--hwf-mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
-    position:relative;width:100%;height:560px;overflow:hidden;isolation:isolate;
+    position:relative;width:100%;height:440px;overflow:hidden;isolation:isolate;
     background:var(--hwf-bg);color:var(--hwf-ink);-webkit-font-smoothing:antialiased;
     border-top:1px solid var(--line-soft);
   }
-  @media(max-width:720px){.hwf-root{height:470px;}}
+  @media(max-width:720px){.hwf-root{height:400px;}}
   .hwf-root canvas{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:none;}
   .hwf-top{
     position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.25fr) repeat(3,minmax(0,1fr));
@@ -1128,34 +1079,25 @@ I believe good design isn't just about looking great—it's about making people 
 
 <div id="previewFloat" aria-hidden="true" style="left: 1378px; top: 290px;"></div>
 
-<!-- project photo-upload modal -->
-<div class="modal-overlay project-overlay" id="modalOverlay">
-  <div class="modal-panel project-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-head">
+<!-- project view: morph gallery -->
+<div class="modal-overlay morph-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="morph-gallery" id="morphGallery" tabindex="0" aria-roledescription="carousel" aria-label="Project images">
+    <div class="morph-stage"><canvas aria-hidden="true"></canvas><div class="morph-fallback" hidden></div></div>
+    <div class="morph-head">
       <span class="modal-dot" id="modalDot"></span>
       <div>
         <div class="modal-cat mono" id="modalCat"></div>
         <h3 id="modalTitle"></h3>
       </div>
+      <span class="morph-count" id="morphCount"></span>
+      <button type="button" class="morph-next" id="modalNext">NEXT PROJECT →</button>
       <button class="modal-close" id="modalClose" aria-label="Close">×</button>
     </div>
-
-    <div class="modal-gallery" id="modalGallery"></div>
-
-    <div class="modal-end">
-      <h3 id="modalEndTitle"></h3>
-      <button type="button" class="mono" id="modalNext">NEXT PROJECT →</button>
-    </div>
+    <button type="button" class="morph-arrow morph-prev" aria-label="Previous image"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button type="button" class="morph-arrow morph-next-img" aria-label="Next image"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <ul class="morph-thumbs"></ul>
+    <span class="morph-sr" aria-live="polite"></span>
   </div>
-</div>
-
-<!-- lightbox for viewing project images full-size -->
-<div class="lightbox-overlay" id="lightboxOverlay">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
-  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">‹</button>
-  <div class="lightbox-stage" id="lightboxStage"></div>
-  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">›</button>
-  <div class="lightbox-count" id="lightboxCount"></div>
 </div>
 
 <!-- sketchpad modal -->
@@ -1199,6 +1141,230 @@ I believe good design isn't just about looking great—it's about making people 
     </div>
   </div>
 </div>
+
+<script>
+/* ---------- morph gallery: WebGL noise dissolve between slides (vanilla port of MorphGallery) ---------- */
+function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.15, drift = 0.5 } = {}){
+  const stage = root.querySelector('.morph-stage');
+  const canvas = stage.querySelector('canvas');
+  const fallback = stage.querySelector('.morph-fallback');
+  const thumbs = root.querySelector('.morph-thumbs');
+  const live = root.querySelector('.morph-sr');
+  const prevBtn = root.querySelector('.morph-prev');
+  const nextBtn = root.querySelector('.morph-next-img');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let onChange = () => {};
+
+  // quintic in-out: the dissolve starts and ends still, and hurries the middle
+  const ease = (t) => { const x = Math.min(Math.max(t, 0), 1); return x < 0.5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2; };
+
+  const VERT = `attribute vec2 a_position; varying vec2 v_uv;
+    void main(){ v_uv = a_position * 0.5 + 0.5; gl_Position = vec4(a_position, 0.0, 1.0); }`;
+  const FRAG = `precision highp float;
+    uniform sampler2D u_from; uniform sampler2D u_to;
+    uniform float u_progress; uniform vec2 u_resolution;
+    uniform float u_fromAspect; uniform float u_toAspect;
+    uniform float u_scale; uniform float u_direction; uniform float u_edge; uniform float u_drift;
+    varying vec2 v_uv;
+    vec3 permute(vec3 x){ return mod(((x * 34.0) + 1.0) * x, 289.0); }
+    float snoise(vec2 v){
+      const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+      vec2 i = floor(v + dot(v, C.yy)); vec2 x0 = v - i + dot(i, C.xx);
+      vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+      vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1; i = mod(i, 289.0);
+      vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+      vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+      m = m * m; m = m * m;
+      vec3 x = 2.0 * fract(p * C.www) - 1.0; vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5); vec3 a0 = x - ox;
+      m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+      vec3 g; g.x = a0.x * x0.x + h.x * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+      return 130.0 * dot(m, g);
+    }
+    float fbm(vec2 v){ float value = 0.0; float amplitude = 0.5;
+      for(int i = 0; i < 5; i++){ value += amplitude * snoise(v); v *= 2.0; amplitude *= 0.5; } return value; }
+    // contain-fit: the whole artwork shows, letterboxed in black (the original crops to cover)
+    vec4 sampleFit(sampler2D tex, vec2 uv, float imgAspect){
+      float canvasAspect = u_resolution.x / u_resolution.y;
+      vec2 scale = (canvasAspect > imgAspect) ? vec2(canvasAspect / imgAspect, 1.0) : vec2(1.0, imgAspect / canvasAspect);
+      vec2 p = (uv - 0.5) * scale + 0.5;
+      if(p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0) return vec4(0.0, 0.0, 0.0, 1.0);
+      return texture2D(tex, p);
+    }
+    void main(){
+      // widen the sweep by one edge at each end, so 0 and 1 are fully one image or the other
+      float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
+      float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
+      // bright areas of the incoming frame cross the front first, so it burns through the old one
+      noise = smoothstep(0.0, 2.0, length(sampleFit(u_to, v_uv, u_toAspect).rgb) + noise);
+      float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
+      // both frames slide, by different amounts in opposite directions, for parallax between the tatters
+      vec4 a = sampleFit(u_from, v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction), u_fromAspect);
+      vec4 b = sampleFit(u_to, v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction), u_toAspect);
+      gl_FragColor = mix(a, b, mixFactor);
+    }`;
+
+  let gl = null, uniforms = {}, failed = false;
+  try {
+    gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+    if(!gl) throw new Error('no webgl');
+    const compile = (type, src) => {
+      const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+      return s;
+    };
+    const program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    if(!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    ['from', 'to', 'progress', 'resolution', 'fromAspect', 'toAspect', 'scale', 'direction', 'edge', 'drift']
+      .forEach(n => { uniforms[n] = gl.getUniformLocation(program, 'u_' + n); });
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  } catch(e){ failed = true; }
+  canvas.hidden = failed;
+  fallback.hidden = !failed;
+
+  let items = [], textures = [], aspects = [], generation = 0;
+  let active = 0, from = 0, to = 0, progress = 1, startedAt = 0, direction = 1, raf = 0, dirty = false;
+
+  const pick = (i) => textures[i] || textures.find(t => t) || null;
+
+  function resize(){
+    if(!gl) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+    if(w && h && (canvas.width !== w || canvas.height !== h)){ canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); dirty = true; kick(); }
+  }
+  new ResizeObserver(resize).observe(canvas);
+
+  function draw(){
+    raf = 0;
+    if(!gl) return;
+    if(progress < 1){
+      const span = reduced.matches ? 0 : duration;
+      progress = span === 0 ? 1 : ease(Math.min((performance.now() - startedAt) / span, 1));
+    }
+    const a = pick(from), b = pick(to);
+    if(a && b){
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, a); gl.uniform1i(uniforms.from, 0);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, b); gl.uniform1i(uniforms.to, 1);
+      gl.uniform1f(uniforms.progress, progress);
+      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+      gl.uniform1f(uniforms.fromAspect, aspects[from] || 1);
+      gl.uniform1f(uniforms.toAspect, aspects[to] || 1);
+      gl.uniform1f(uniforms.scale, noiseScale);
+      gl.uniform1f(uniforms.direction, direction);
+      gl.uniform1f(uniforms.edge, Math.max(edge, 0.001));
+      gl.uniform1f(uniforms.drift, drift);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      canvas.classList.add('ready');
+      dirty = false;
+    }
+    // only keep drawing while a dissolve is running; idle frames cost nothing
+    if(progress < 1 || dirty) kick();
+  }
+  function kick(){ if(!raf) raf = requestAnimationFrame(draw); }
+
+  function sync(){
+    const n = items.length;
+    thumbs.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-current', i === active));
+    const cur = thumbs.querySelectorAll('button')[active];
+    // centre the active thumb by scrolling the strip only (scrollIntoView would also scroll the popup)
+    if(cur) thumbs.scrollLeft = cur.parentNode.offsetLeft - (thumbs.clientWidth - cur.parentNode.offsetWidth) / 2;
+    prevBtn.hidden = nextBtn.hidden = n < 2;
+    live.textContent = `Image ${active + 1} of ${n}`;
+    if(failed) fallback.querySelectorAll('img').forEach((img, i) => { img.style.opacity = i === active ? 1 : 0; img.setAttribute('aria-hidden', i !== active); });
+    onChange(active, n);
+  }
+
+  function go(next){
+    const n = items.length;
+    if(n < 2) return;
+    const wrapped = ((next % n) + n) % n;
+    if(wrapped === active) return;
+    // direction follows the shortest way round, so a wrap drifts forward like every other step
+    direction = ((wrapped - active + n) % n) * 2 <= n ? 1 : -1;
+    from = progress < 1 ? to : active;
+    to = wrapped;
+    active = wrapped;
+    progress = 0;
+    startedAt = performance.now();
+    sync();
+    kick();
+  }
+
+  function setItems(list, start = 0){
+    generation++;
+    const gen = generation;
+    if(gl) textures.forEach(t => t && gl.deleteTexture(t));
+    items = list;
+    textures = list.map(() => null);
+    aspects = list.map(() => 1);
+    active = from = to = Math.min(Math.max(start, 0), list.length - 1);
+    progress = 1;
+    canvas.classList.remove('ready');
+    thumbs.innerHTML = '';
+    list.forEach((src, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<button type="button" aria-label="Show image ${i + 1}"><img alt="" width="80" height="50" decoding="async"></button>`;
+      li.querySelector('img').src = src;
+      li.querySelector('button').addEventListener('click', () => go(i));
+      thumbs.appendChild(li);
+    });
+    if(failed){
+      fallback.innerHTML = '';
+      list.forEach(src => { const img = new Image(); img.alt = ''; img.src = src; fallback.appendChild(img); });
+    } else {
+      // upload each image as it arrives; the first one to land starts the picture
+      list.forEach((src, i) => {
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = () => {
+          if(gen !== generation) return;
+          const tex = gl.createTexture();
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+          // photos are not powers of two: clamp + linear is the only legal pair in WebGL1
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          textures[i] = tex;
+          aspects[i] = img.naturalWidth / Math.max(img.naturalHeight, 1);
+          dirty = true;
+          resize();
+          kick();
+        };
+        img.src = src;
+      });
+    }
+    sync();
+  }
+
+  prevBtn.addEventListener('click', () => go(active - 1));
+  nextBtn.addEventListener('click', () => go(active + 1));
+  let swipeX = null;
+  stage.addEventListener('pointerdown', (e) => { swipeX = e.clientX; });
+  stage.addEventListener('pointerup', (e) => {
+    if(swipeX === null) return;
+    const dx = e.clientX - swipeX;
+    swipeX = null;
+    if(Math.abs(dx) > 48) go(active + (dx < 0 ? 1 : -1));
+  });
+
+  return {
+    setItems, go,
+    step: (d) => go(active + d),
+    onChange: (fn) => { onChange = fn; },
+  };
+}
+</script>
 
 <script>
   const rows = document.querySelectorAll('.work-row');
@@ -1360,38 +1526,35 @@ I believe good design isn't just about looking great—it's about making people 
   const modalTitle = document.getElementById('modalTitle');
   const modalCat = document.getElementById('modalCat');
   const modalDot = document.getElementById('modalDot');
-  const modalGallery = document.getElementById('modalGallery');
-  const modalEndTitle = document.getElementById('modalEndTitle');
+  const morphRoot = document.getElementById('morphGallery');
+  const morph = createMorphGallery(morphRoot);
+  const morphCount = document.getElementById('morphCount');
+  const pad2 = (n) => String(n).padStart(2, '0');
+  morph.onChange((i, n) => { morphCount.textContent = `${pad2(i + 1)} / ${pad2(n)}`; });
   const modalNext = document.getElementById('modalNext');
   let currentProject = null;
   let currentRow = null;
   let currentImages = [];
 
-  function renderGallery(){
+  function renderGallery(start){
     const defaults = DEFAULT_IMAGES[currentProject] || [];
     const store = loadStore();
     const userImgs = store[currentProject] || [];
     currentImages = defaults.concat(userImgs);
-    modalGallery.innerHTML = currentImages.map((src, idx) =>
-      `<div class="gallery-item" data-idx="${idx}" style="animation-delay:${Math.min(idx * 90, 360)}ms">
-        <img src="${src}" alt="">
-        <span class="gallery-expand">⤢</span>
-      </div>`
-    ).join('');
+    morph.setItems(currentImages, start || 0);
     if(currentRow) setRowThumb(currentRow, currentImages);
   }
 
-  function openModal(row){
+  function openModal(row, start){
     currentRow = row;
     currentProject = row.dataset.project;
     modalTitle.textContent = row.querySelector('h3').textContent;
     modalCat.textContent = row.querySelector('.row-tags').textContent;
     const dot = row.querySelector('.row-dot');
     modalDot.style.background = dot ? getComputedStyle(dot).backgroundColor : 'var(--cobalt)';
-    modalEndTitle.textContent = modalTitle.textContent;
-    renderGallery();
-    overlay.scrollTop = 0;
+    renderGallery(start);
     overlay.classList.add('open');
+    morphRoot.focus({ preventScroll: true });
     document.body.style.overflow = 'hidden';
   }
   function closeModal(){
@@ -1421,91 +1584,11 @@ I believe good design isn't just about looking great—it's about making people 
 
   modalClose.addEventListener('click', closeModal);
   overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
-
-  modalGallery.addEventListener('click', (e) => {
-    const item = e.target.closest('.gallery-item');
-    if(!item) return;
-    openLightbox(parseInt(item.dataset.idx, 10));
-  });
-
-  /* ---------- lightbox ---------- */
-  const lightboxOverlay = document.getElementById('lightboxOverlay');
-  const lightboxStage = document.getElementById('lightboxStage');
-  const lightboxClose = document.getElementById('lightboxClose');
-  const lightboxPrev = document.getElementById('lightboxPrev');
-  const lightboxNext = document.getElementById('lightboxNext');
-  const lightboxCount = document.getElementById('lightboxCount');
-  let lightboxIdx = 0;
-  let lightboxBusy = false;
-  let wheelCooldown = false;
-
-  function updateNav(){
-    lightboxCount.textContent = `${lightboxIdx + 1} / ${currentImages.length}`;
-    const multi = currentImages.length > 1;
-    lightboxPrev.style.display = multi ? 'flex' : 'none';
-    lightboxNext.style.display = multi ? 'flex' : 'none';
-  }
-
-  function openLightbox(idx){
-    lightboxIdx = idx;
-    lightboxStage.innerHTML = `<img src="${currentImages[lightboxIdx]}" alt="">`;
-    updateNav();
-    lightboxOverlay.classList.add('open');
-  }
-  function closeLightbox(){
-    lightboxOverlay.classList.remove('open');
-  }
-
-  function stepLightbox(delta){
-    if(lightboxBusy || currentImages.length < 2) return;
-    lightboxBusy = true;
-    const goingNext = delta > 0;
-    lightboxIdx = (lightboxIdx + delta + currentImages.length) % currentImages.length;
-    updateNav();
-
-    const oldImg = lightboxStage.querySelector('img');
-    if(oldImg) oldImg.classList.add(goingNext ? 'slide-out-next' : 'slide-out-prev');
-
-    const newImg = document.createElement('img');
-    newImg.src = currentImages[lightboxIdx];
-    newImg.classList.add(goingNext ? 'slide-in-next' : 'slide-in-prev');
-    lightboxStage.appendChild(newImg);
-
-    setTimeout(() => {
-      if(oldImg) oldImg.remove();
-      lightboxBusy = false;
-    }, 560);
-  }
-
-  lightboxClose.addEventListener('click', closeLightbox);
-  lightboxPrev.addEventListener('click', () => stepLightbox(-1));
-  lightboxNext.addEventListener('click', () => stepLightbox(1));
-  lightboxOverlay.addEventListener('click', (e) => { if(e.target === lightboxOverlay) closeLightbox(); });
-  lightboxOverlay.addEventListener('wheel', (e) => {
-    if(!lightboxOverlay.classList.contains('open')) return;
-    e.preventDefault();
-    if(wheelCooldown || Math.abs(e.deltaY) < 8) return;
-    wheelCooldown = true;
-    stepLightbox(e.deltaY > 0 ? 1 : -1);
-    setTimeout(() => { wheelCooldown = false; }, 600);
-  }, { passive: false });
-
-  // touch swipe support
-  let touchStartX = null;
-  lightboxOverlay.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  lightboxOverlay.addEventListener('touchend', (e) => {
-    if(touchStartX === null) return;
-    const diff = e.changedTouches[0].clientX - touchStartX;
-    if(Math.abs(diff) > 40) stepLightbox(diff < 0 ? 1 : -1);
-    touchStartX = null;
-  }, { passive: true });
-
   document.addEventListener('keydown', (e) => {
-    if(!lightboxOverlay.classList.contains('open')) return;
-    if(e.key === 'Escape') closeLightbox();
-    if(e.key === 'ArrowLeft') stepLightbox(-1);
-    if(e.key === 'ArrowRight') stepLightbox(1);
+    if(!overlay.classList.contains('open')) return;
+    if(e.key === 'Escape') closeModal();
+    else if(e.key === 'ArrowLeft'){ e.preventDefault(); morph.step(-1); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); morph.step(1); }
   });
 
   // mobile nav toggle
@@ -1773,15 +1856,7 @@ I believe good design isn't just about looking great—it's about making people 
   const esc = (t) => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   function openProject(row, imageIdx){
-    row.click();
-    if(imageIdx == null) return;
-    // land on the chosen image, just under the pinned header
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const overlay = document.getElementById('modalOverlay');
-      const item = document.querySelectorAll('#modalGallery .gallery-item')[imageIdx];
-      const head = overlay && overlay.querySelector('.modal-head');
-      if(overlay && item && head) overlay.scrollTop += item.getBoundingClientRect().top - head.getBoundingClientRect().bottom;
-    }));
+    openModal(row, imageIdx || 0);
   }
 
   const folders = [];
@@ -2126,8 +2201,8 @@ I believe good design isn't just about looking great—it's about making people 
 
   const WORD = 'PRESLEY';
   const COLORS = { background: '#0c0c0b', ink: '#e9e4da', warm: '#e9762b' };
-  // a light crop: any deeper and the bottom edge eats the foot of the L
-  const DOT_GAP = 6, RADIUS = 80, CROP = 0.02, GRAIN = 0.5;
+  // half the word hangs below the bottom edge: it's a graphic element, not a label
+  const DOT_GAP = 6, RADIUS = 80, CROP = 0.5, GRAIN = 0.5, GAP = 28;
   const FONT_WEIGHT = 800, FONT = '"Inter Tight", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif';
 
   const hex = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h); return m ? [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16)) : null; };
@@ -2156,6 +2231,10 @@ I believe good design isn't just about looking great—it's about making people 
     m.font = `${FONT_WEIGHT} ${fit}px ${FONT}`;
     const box = m.measureText(WORD);
     const cap = box.actualBoundingBoxAscent || fit * 0.72;
+    // size the footer to its content: links, a small gap, then just the visible part of the word
+    const rule = root.querySelector('.hwf-rule');
+    const want = Math.round(rule.offsetTop + rule.offsetHeight + GAP + cap * (1 - CROP));
+    if(Math.abs(want - h) > 1){ root.style.height = want + 'px'; return layout(); }
     m.fillStyle = '#000';
     m.textBaseline = 'alphabetic';
     m.fillText(WORD, (w - box.width) / 2, h + cap * CROP);
