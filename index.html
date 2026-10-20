@@ -1332,8 +1332,11 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
           if(gen !== generation) return;
           // WebGL1 can't mipmap these, so shrink large images with the 2D canvas first;
           // sampling a 1600px image down to ~700px with plain LINEAR leaves jagged edges
-          const maxDim = Math.max(canvas.width, canvas.height, 1024);
-          const k = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+          // pre-shrink to the exact size it's shown at (contain-fit in device pixels), so the
+          // shader samples ~1:1; anything bigger gets minified without smoothing and turns grainy
+          resize();
+          const cw = canvas.width || 1440, ch = canvas.height || 900;
+          const k = Math.min(1, cw / img.naturalWidth, ch / img.naturalHeight);
           let src = img;
           if(k < 1){
             src = document.createElement('canvas');
@@ -2119,8 +2122,8 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   // [project, image index] from the portfolio, in the order they fly in
   const PICKS = [
     ['basin-studio-reel-kit', 0], ['field-notes-quarterly', 6], ['northline-coffee-co', 2],
-    ['ledger-budgeting-app', 4], ['hollow-and-rind-skincare', 6], ['basin-studio-reel-kit', 1],
-    ['field-notes-quarterly', 7], ['northline-coffee-co', 4], ['basin-studio-reel-kit', 2],
+    ['ledger-budgeting-app', 4], ['field-notes-quarterly', 0], ['field-notes-quarterly', 4],
+    ['field-notes-quarterly', 7], ['northline-coffee-co', 4], ['field-notes-quarterly', 2],
   ];
   const shrink = (src, max) => new Promise((resolve) => {
     const im = new Image();
