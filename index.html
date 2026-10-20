@@ -2088,19 +2088,10 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     if(fraction === 1) index++;
   };
 
-  const holder = root.closest('.tunnel-title');
-  let wasPaused = false;
-  const pausedNow = () => {
-    const paused = !!holder && holder.hasAttribute('data-paused');
-    // pausing mid-dissolve would freeze a blob: settle on the incoming phrase first
-    if(paused && !wasPaused && cooldown <= 0){ index++; doCooldown(); cooldown = cooldownTime; }
-    wasPaused = paused;
-    return paused;
-  };
   setStyles(0);
   const animate = (now) => {
     requestAnimationFrame(animate);
-    if(!inView || document.visibilityState === 'hidden' || pausedNow()){ last = now; return; }
+    if(!inView || document.visibilityState === 'hidden'){ last = now; return; }
     const dt = (now - last) / 1000;
     last = now;
     cooldown -= dt;
@@ -2239,8 +2230,6 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     title.style.opacity = tOpacity;
     title.style.visibility = tOpacity < 0.02 ? 'hidden' : 'visible';
     title.style.transform = `scale(${map(p, [0, 1], [1, 1.3])})`;
-    // freeze the morphing headline once the flight starts: its filter is costly to redraw while it scales
-    title.toggleAttribute('data-paused', p > 0.02);
     if(prompt) prompt.style.opacity = map(p, [0, 0.12], [1, 0]);
   }
 
