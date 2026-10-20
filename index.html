@@ -340,28 +340,12 @@
   }
   @media(max-width:900px){.hero{height:240vh;}.tunnel-stage{--tunnel-top:64px;}}
   @media(max-width:767px){.tunnel-stage{perspective:900px;}}
-  .tunnel-grid{
-    position:absolute;inset:0;pointer-events:none;opacity:0.65;
-    background-image:radial-gradient(#1e1b4b 1px,transparent 1px);background-size:28px 28px;
-    -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 60%,transparent 100%);
-    mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 60%,transparent 100%);
-  }
-  .tunnel-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse closest-side at center,rgba(99,102,241,0.2) 0%,transparent 100%);}
-  .tunnel-ring{position:absolute;border-radius:50%;pointer-events:none;}
-  .tunnel-ring-a{width:48vmin;height:48vmin;border:1px solid rgba(129,140,248,0.1);}
-  .tunnel-ring-b{width:76vmin;height:76vmin;border:1px dashed rgba(255,255,255,0.1);}
 
   .tunnel-title{
     position:relative;z-index:0;pointer-events:none;
     display:flex;flex-direction:column;align-items:center;text-align:center;
-    padding:0 24px;max-width:960px;will-change:transform,opacity;
+    width:100%;padding:0 24px;max-width:960px;will-change:transform,opacity;
   }
-  .tunnel-title .btn, .tunnel-title .tag-pill{pointer-events:auto;}
-  .hero .eyebrow{
-    font-size:0.72rem;color:var(--ink-soft);
-    display:flex;align-items:center;gap:10px;margin-bottom:28px;
-  }
-  .hero .eyebrow .chip{width:9px;height:9px;background:var(--red);flex-shrink:0;}
   .hero h1{font-size:clamp(2.5rem,6.4vw,5rem);max-width:16ch;}
   .hero h1 em{font-style:normal;color:var(--cobalt);}
   /* morphing headline: blur crossfade, thresholded into a gooey dissolve */
@@ -370,16 +354,13 @@
     filter:url(#heroMorphThreshold) blur(0.6px);
   }
   .morph-text span{position:absolute;left:0;right:0;top:0;white-space:nowrap;}
-  .morph-text span.is-rainbow{
-    background:linear-gradient(90deg,#6c86ff,#ff6fd8,#ff9142,#f2d705,#ff5c42,#6c86ff);
-    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
-  }
   .morph-defs{position:absolute;width:0;height:0;}
   @media (prefers-reduced-motion: reduce){
     .hero h1.morph-text{filter:none;height:auto;}
     .morph-text span{position:static;white-space:normal;}
   }
-  .hero .cta-row, .hero .tag-row{justify-content:center;}
+  .hero-intro{display:flex;flex-direction:column;align-items:center;text-align:center;padding-bottom:20px;}
+  .hero-intro .cta-row, .hero-intro .tag-row{justify-content:center;}
 
   .tunnel-prompt{
     position:absolute;bottom:32px;left:0;right:0;z-index:20;pointer-events:none;
@@ -411,16 +392,16 @@
   }
   @media(max-width:480px){
     .hero h1{font-size:clamp(2.1rem,9.5vw,2.6rem);}
-    .hero .sub{font-size:1rem;max-width:none;}
-    .hero .cta-row{gap:12px;}
-    .hero .cta-row .btn{flex:1 1 auto;justify-content:center;padding:15px 20px;}
+    .hero-intro .sub{font-size:1rem;max-width:none;}
+    .hero-intro .cta-row{gap:12px;}
+    .hero-intro .cta-row .btn{flex:1 1 auto;justify-content:center;padding:15px 20px;}
     .tag-row{margin-top:32px;gap:10px;}
     .tunnel-card-label{padding:12px 14px;}
     .tunnel-card-label span{font-size:0.62rem;}
   }
 
-  .hero .sub{margin-top:26px;max-width:48ch;font-size:1.1rem;line-height:1.6;color:var(--ink-soft);}
-  .hero .cta-row{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;}
+  .hero-intro .sub{margin-top:0;max-width:48ch;font-size:1.1rem;line-height:1.6;color:var(--ink-soft);}
+  .hero-intro .cta-row{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;}
   /* liquid glass buttons: transparent pill lit by inset rim highlights */
   .btn, .btn-light, .tag-pill{
     appearance:none;-webkit-appearance:none;margin:0;
@@ -857,32 +838,30 @@
   <!-- HERO -->
   <section class="hero" id="heroTunnel">
     <div class="tunnel-stage">
-      <div class="tunnel-grid" aria-hidden="true"></div>
-      <div class="tunnel-glow" aria-hidden="true"></div>
-      <div class="tunnel-ring tunnel-ring-a" aria-hidden="true"></div>
-      <div class="tunnel-ring tunnel-ring-b" aria-hidden="true"></div>
-
       <div class="tunnel-title">
-        <div class="eyebrow mono"><span class="chip"></span>N°01 — Graphic Designer</div>
         <h1 class="morph-text" id="heroMorph" aria-label="Turn your vision into reality"><span aria-hidden="true"></span><span aria-hidden="true"></span></h1>
         <svg class="morph-defs" aria-hidden="true"><defs><filter id="heroMorphThreshold"><feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140"/></filter></defs></svg>
-        <p class="sub">I'm Presley Jackson— I design brands people remember, ads that get attention, merch people wear, and content that keeps businesses moving. Whatever the medium, the goal is always the same—create work that makes an impact...</p>
-        <div class="cta-row">
-          <a href="#work" class="btn btn-solid">View the work →</a>
-          <a href="#contact" class="btn btn-outline">Start a project</a>
-        </div>
-        <div class="tag-row">
-          <button type="button" class="tag-pill" data-goto="northline-coffee-co"><i style="background:var(--cobalt);"></i>Merch</button>
-          <button type="button" class="tag-pill" data-goto="field-notes-quarterly"><i style="background:var(--red);"></i>Advertisements</button>
-          <button type="button" class="tag-pill" data-goto="ledger-budgeting-app"><i style="background:var(--yellow);"></i>Website</button>
-          <button type="button" class="tag-pill" data-goto="hollow-and-rind-skincare"><i style="background:var(--mint);"></i>Brand Identity</button>
-          <button type="button" class="tag-pill" data-goto="mile-marker-podcast"><i style="background:var(--violet);"></i>Social collection</button>
-          <button type="button" class="tag-pill" data-goto="basin-studio-reel-kit"><i style="background:var(--coral);"></i>Posters</button>
-        </div>
       </div>
 
       <div class="tunnel-prompt mono" aria-hidden="true"><span>Scroll to explore</span><i></i></div>
       <div class="tunnel-space" id="tunnelSpace"></div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="hero-intro">
+    <p class="sub">I'm Presley Jackson— I design brands people remember, ads that get attention, merch people wear, and content that keeps businesses moving. Whatever the medium, the goal is always the same—create work that makes an impact...</p>
+    <div class="cta-row">
+      <a href="#work" class="btn btn-solid">View the work →</a>
+      <a href="#contact" class="btn btn-outline">Start a project</a>
+    </div>
+    <div class="tag-row">
+      <button type="button" class="tag-pill" data-goto="northline-coffee-co"><i style="background:var(--cobalt);"></i>Merch</button>
+      <button type="button" class="tag-pill" data-goto="field-notes-quarterly"><i style="background:var(--red);"></i>Advertisements</button>
+      <button type="button" class="tag-pill" data-goto="ledger-budgeting-app"><i style="background:var(--yellow);"></i>Website</button>
+      <button type="button" class="tag-pill" data-goto="hollow-and-rind-skincare"><i style="background:var(--mint);"></i>Brand Identity</button>
+      <button type="button" class="tag-pill" data-goto="mile-marker-podcast"><i style="background:var(--violet);"></i>Social collection</button>
+      <button type="button" class="tag-pill" data-goto="basin-studio-reel-kit"><i style="background:var(--coral);"></i>Posters</button>
     </div>
   </section>
 
@@ -1964,11 +1943,10 @@ I believe good design isn't just about looking great—it's about making people 
   if(!root) return;
   const [el1, el2] = root.querySelectorAll('span');
   const phrases = ['TURN YOUR', 'VISION', 'INTO REALITY'];
-  const rainbow = { 'INTO REALITY': true };
   const morphTime = 1.5, cooldownTime = 0.5;
 
   const put = (el, text) => {
-    if(el.textContent !== text){ el.textContent = text; el.classList.toggle('is-rainbow', !!rainbow[text]); }
+    if(el.textContent !== text) el.textContent = text;
   };
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     put(el1, phrases.join(' '));
