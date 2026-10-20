@@ -360,15 +360,15 @@
     .hero h1.morph-text{filter:none;height:auto;}
     .morph-text span{position:static;white-space:normal;}
   }
-  .hero-intro{display:flex;flex-direction:column;align-items:center;text-align:center;padding-bottom:20px;}
-  .hero-intro .cta-row, .hero-intro .tag-row{justify-content:center;}
+  .hero-intro{padding:140px 60px 120px;}
+  @media(max-width:900px){.hero-intro{padding:90px 24px 70px;}}
 
   .tunnel-prompt{
     position:absolute;bottom:32px;left:0;right:0;z-index:20;pointer-events:none;
     display:flex;flex-direction:column;align-items:center;gap:8px;
     font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ink-soft);
   }
-  .tunnel-prompt i{display:block;width:1px;height:24px;background:linear-gradient(to bottom,#6366f1,transparent);}
+  .tunnel-prompt i{display:block;width:1px;height:24px;background:linear-gradient(to bottom,#fff,transparent);}
 
   .tunnel-space{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;}
   .tunnel-card{
@@ -393,16 +393,17 @@
   }
   @media(max-width:480px){
     .hero h1{font-size:clamp(2.1rem,9.5vw,2.6rem);}
-    .hero-intro .sub{font-size:1rem;max-width:none;}
-    .hero-intro .cta-row{gap:12px;}
-    .hero-intro .cta-row .btn{flex:1 1 auto;justify-content:center;padding:15px 20px;}
     .tag-row{margin-top:32px;gap:10px;}
     .tunnel-card-label{padding:12px 14px;}
     .tunnel-card-label span{font-size:0.62rem;}
   }
 
-  .hero-intro .sub{margin-top:0;max-width:48ch;font-size:1.1rem;line-height:1.6;color:var(--ink-soft);}
-  .hero-intro .cta-row{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;}
+  .hero-intro .sub{
+    margin:0;max-width:24ch;font-family:'Space Grotesk',sans-serif;font-weight:500;
+    font-size:clamp(1.9rem,4.6vw,4rem);line-height:1.12;letter-spacing:-0.025em;color:var(--ink);
+  }
+  .hero-intro .sub .w{opacity:0.16;transition:opacity .25s linear;}
+  @media (prefers-reduced-motion: reduce){.hero-intro .sub .w{opacity:1;}}
   /* liquid glass buttons: transparent pill lit by inset rim highlights */
   .btn, .btn-light, .tag-pill{
     appearance:none;-webkit-appearance:none;margin:0;
@@ -454,6 +455,15 @@
   .section-head .tag .chip{width:8px;height:8px;flex-shrink:0;}
   .section-head h2{font-size:clamp(1.7rem,3.6vw,2.4rem);}
   .section-head .count{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--ink-soft);}
+  .section-head .tag-row{margin-top:22px;}
+  .float-cta{
+    position:fixed;left:116px;bottom:28px;z-index:900;
+    background:rgba(12,12,12,0.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    transition:transform .3s ease,color .3s ease,opacity .3s ease;
+  }
+  .float-cta:hover{color:var(--cobalt);}
+  .float-cta.is-hidden{opacity:0;pointer-events:none;}
+  @media(max-width:900px){.float-cta{left:16px;bottom:16px;padding:14px 22px;}}
   .work-hint{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.04em;color:var(--ink-soft);margin-top:12px;text-transform:none;}
 
   section{padding:100px 60px;position:relative;}
@@ -802,18 +812,6 @@
   <!-- INTRO -->
   <section class="hero-intro">
     <p class="sub">I'm Presley Jackson— I design brands people remember, ads that get attention, merch people wear, and content that keeps businesses moving. Whatever the medium, the goal is always the same—create work that makes an impact...</p>
-    <div class="cta-row">
-      <a href="#work" class="btn btn-solid">View the work →</a>
-      <a href="#contact" class="btn btn-outline">Start a project</a>
-    </div>
-    <div class="tag-row">
-      <button type="button" class="tag-pill" data-goto="northline-coffee-co"><i style="background:var(--cobalt);"></i>Merch</button>
-      <button type="button" class="tag-pill" data-goto="field-notes-quarterly"><i style="background:var(--red);"></i>Advertisements</button>
-      <button type="button" class="tag-pill" data-goto="ledger-budgeting-app"><i style="background:var(--yellow);"></i>Website</button>
-      <button type="button" class="tag-pill" data-goto="hollow-and-rind-skincare"><i style="background:var(--mint);"></i>Brand Identity</button>
-      <button type="button" class="tag-pill" data-goto="mile-marker-podcast"><i style="background:var(--violet);"></i>Social collection</button>
-      <button type="button" class="tag-pill" data-goto="basin-studio-reel-kit"><i style="background:var(--coral);"></i>Posters</button>
-    </div>
   </section>
 
   <!-- WORK -->
@@ -823,6 +821,14 @@
         <div class="tag mono"><span class="chip" style="background:var(--red);"></span>Selected Projects</div>
         <h2>Visions Reimagined</h2>
         <p class="work-hint">Explore the collection.</p>
+        <div class="tag-row">
+          <button type="button" class="tag-pill" data-goto="northline-coffee-co"><i style="background:var(--cobalt);"></i>Merch</button>
+          <button type="button" class="tag-pill" data-goto="field-notes-quarterly"><i style="background:var(--red);"></i>Advertisements</button>
+          <button type="button" class="tag-pill" data-goto="ledger-budgeting-app"><i style="background:var(--yellow);"></i>Website</button>
+          <button type="button" class="tag-pill" data-goto="hollow-and-rind-skincare"><i style="background:var(--mint);"></i>Brand Identity</button>
+          <button type="button" class="tag-pill" data-goto="mile-marker-podcast"><i style="background:var(--violet);"></i>Social collection</button>
+          <button type="button" class="tag-pill" data-goto="basin-studio-reel-kit"><i style="background:var(--coral);"></i>Posters</button>
+        </div>
       </div>
       <div class="count mono">06 Projects — 2023–2026</div>
     </div>
@@ -1077,6 +1083,9 @@ I believe good design isn't just about looking great—it's about making people 
 
 </div>
 
+<!-- floating call to action, pinned bottom-left -->
+<a href="#contact" class="btn float-cta" id="floatCta">Start a project</a>
+
 <div id="previewFloat" aria-hidden="true" style="left: 1378px; top: 290px;"></div>
 
 <!-- project view: morph gallery -->
@@ -1200,7 +1209,8 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
       // both frames slide, by different amounts in opposite directions, for parallax between the tatters
       vec4 a = sampleFit(u_from, v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction), u_fromAspect);
       vec4 b = sampleFit(u_to, v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction), u_toAspect);
-      gl_FragColor = mix(a, b, mixFactor);
+      // textures are premultiplied, so this composites transparent cutouts cleanly onto black
+      gl_FragColor = vec4(mix(a, b, mixFactor).rgb, 1.0);
     }`;
 
   let gl = null, uniforms = {}, failed = false;
@@ -1226,6 +1236,8 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     ['from', 'to', 'progress', 'resolution', 'fromAspect', 'toAspect', 'scale', 'direction', 'edge', 'drift']
       .forEach(n => { uniforms[n] = gl.getUniformLocation(program, 'u_' + n); });
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    // transparent cutouts (merch mockups): premultiply so soft edges don't fringe
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
   } catch(e){ failed = true; }
   canvas.hidden = failed;
   fallback.hidden = !failed;
@@ -1327,9 +1339,22 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
         img.decoding = 'async';
         img.onload = () => {
           if(gen !== generation) return;
+          // WebGL1 can't mipmap these, so shrink large images with the 2D canvas first;
+          // sampling a 1600px image down to ~700px with plain LINEAR leaves jagged edges
+          const maxDim = Math.max(canvas.width, canvas.height, 1024);
+          const k = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+          let src = img;
+          if(k < 1){
+            src = document.createElement('canvas');
+            src.width = Math.round(img.naturalWidth * k);
+            src.height = Math.round(img.naturalHeight * k);
+            const c2 = src.getContext('2d');
+            c2.imageSmoothingQuality = 'high';
+            c2.drawImage(img, 0, 0, src.width, src.height);
+          }
           const tex = gl.createTexture();
           gl.bindTexture(gl.TEXTURE_2D, tex);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
           // photos are not powers of two: clamp + linear is the only legal pair in WebGL1
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -2009,6 +2034,44 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   };
   new ResizeObserver(size).observe(grid);
   size();
+})();
+</script>
+<script>
+/* ---------- intro statement: each word lights up as you scroll through it ---------- */
+(function(){
+  const p = document.querySelector('.hero-intro .sub');
+  if(!p) return;
+  const text = p.textContent.trim();
+  p.setAttribute('aria-label', text);
+  p.innerHTML = text.split(/(\s+)/).map(t => /^\s+$/.test(t) ? t : `<span class="w" aria-hidden="true">${t.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`).join('');
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const words = [...p.querySelectorAll('.w')];
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const r = p.getBoundingClientRect(), vh = window.innerHeight;
+    // 0 as the block's top reaches 85% down the screen, 1 as its bottom passes 45%
+    const progress = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.4)));
+    const lit = progress * words.length;
+    words.forEach((w, i) => { w.style.opacity = 0.16 + 0.84 * Math.min(1, Math.max(0, lit - i)); });
+  };
+  window.addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+<script>
+/* ---------- floating "Start a project": steps aside where the contact form already is ---------- */
+(function(){
+  const cta = document.getElementById('floatCta');
+  const targets = [document.getElementById('contact'), document.querySelector('footer')].filter(Boolean);
+  if(!cta || !targets.length) return;
+  const showing = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => e.isIntersecting ? showing.add(e.target) : showing.delete(e.target));
+    cta.classList.toggle('is-hidden', showing.size > 0);
+  }, { threshold: 0.15 });
+  targets.forEach(t => io.observe(t));
 })();
 </script>
 <script>
