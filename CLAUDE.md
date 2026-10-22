@@ -8,5 +8,5 @@ Presley Jackson's portfolio site: a single self-contained `index.html` (images e
 
 ## Page structure notes
 - Projects live in `DEFAULT_IMAGES` (keyed by project slug) and in the `.work-row` elements inside `#workList`. The rows are hidden but still drive the project popup, the "Next project" button, the hero tunnel cards and the glass folders (`#folderGrid`), so edit project names/tags/years there.
-- Folder labels come from `NAMES` in the glass-folder script; the second line is the piece count. No dates anywhere (owner's call: the work spans years).
+- Folder labels come from `NAMES` in the glass-folder script; no second line (owner removed counts). No dates anywhere (owner's call: the work spans years).
 - `photography` is an empty project ("Coming soon" folder that can't open). Add images to `DEFAULT_IMAGES['photography']` (WebP data URIs, ~1400px, like the others) and it becomes a normal folder automatically.
