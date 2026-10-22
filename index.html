@@ -290,40 +290,11 @@
   .gf-title { font-size: 18px; font-weight: 500; line-height: 1.15; letter-spacing: -.012em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .gf-meta { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: .03em; text-transform: uppercase; color: var(--gf-ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .gf-key {
-    all: unset; box-sizing: border-box; position: absolute; right: 22px; bottom: 22px; z-index: 12;
-    width: 58px; height: 58px; border-radius: 18px; display: grid; place-items: center; cursor: pointer;
-    color: #f5f5f7;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .06) 100%);
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 0 0 1px rgba(255, 255, 255, .1), 0 10px 18px -8px rgba(0, 0, 0, .6);
-    transition: transform .35s var(--gf-spring), box-shadow .35s var(--gf-ease), opacity .6s var(--gf-ease) .7s, scale .7s var(--gf-spring) .7s;
-  }
-  .gf-key:hover { transform: translateY(-2px); }
-  .gf-key:active { transform: translateY(0) scale(.93); transition-duration: .12s; }
-  .gf-key:focus-visible { outline: 2px solid #4c8dff; outline-offset: 3px; }
-  .gf-key[aria-expanded="true"] { transform: scale(.96); }
-  .gf-glyph { display: block; max-width: none; fill: none; stroke: currentColor; stroke-linecap: round; width: 30px; height: 12px; stroke-width: 1.7; }
 
-  .gf-menu {
-    position: absolute; right: 22px; bottom: 90px; z-index: 20; min-width: 176px; padding: 6px; border-radius: 16px;
-    display: flex; flex-direction: column;
-    background: rgba(30, 30, 34, .72); -webkit-backdrop-filter: blur(24px) saturate(1.6); backdrop-filter: blur(24px) saturate(1.6);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 0 0 .5px rgba(255, 255, 255, .1), 0 24px 48px -16px rgba(0, 0, 0, .8);
-    transform-origin: 100% 100%; opacity: 0; visibility: hidden; transform: translateY(6px) scale(.94);
-    transition: opacity .2s var(--gf-ease), transform .32s var(--gf-spring), visibility 0s .32s;
-  }
-  .gf-menu[data-open] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-  .gf-menu-item {
-    all: unset; box-sizing: border-box; padding: 9px 12px; border-radius: 10px;
-    font-size: 13.5px; font-weight: 450; color: #f4f4f5; cursor: pointer;
-  }
-  .gf-menu-item:hover, .gf-menu-item:focus-visible { background: rgba(255, 255, 255, .09); }
 
   .gf-root:not([data-entered]) .gf-back, .gf-root:not([data-entered]) .gf-back-rim { translate: 0 22px; opacity: 0; }
   .gf-root:not([data-entered]) .gf-sheet { translate: 0 -120px; opacity: 0; }
   .gf-root:not([data-entered]) .gf-front { translate: 0 46px; opacity: 0; }
-  .gf-root:not([data-entered]) .gf-key { opacity: 0; scale: .6; }
   .gf-root:not([data-entered]) .gf-shadow { opacity: 0; }
   .gf-back, .gf-back-rim { transition: translate 1s var(--gf-ease), opacity .9s var(--gf-ease); }
   .gf-root[data-entered] .gf-sheet { transition-delay: calc(var(--gf-depth) * 40ms), 0s, calc(.18s + var(--gf-depth) * 90ms), calc(.18s + var(--gf-depth) * 90ms); }
@@ -1925,13 +1896,6 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
             <div class="gf-label"><span class="gf-title">${esc(label)}</span>${empty ? '<span class="gf-meta">Coming soon</span>' : ''}</div>
           </div>
           <div class="gf-files" role="list" aria-label="${esc(label)} contents" inert></div>
-          <button type="button" class="gf-key" aria-label="More options for ${esc(label)}" aria-haspopup="menu" aria-expanded="false">
-            <svg class="gf-glyph" viewBox="0 0 30 12" aria-hidden="true"><rect x="1" y="1.5" width="8" height="9" rx="3.4"/><rect x="11" y="1.5" width="8" height="9" rx="3.4"/><rect x="21" y="1.5" width="8" height="9" rx="3.4"/></svg>
-          </button>
-          <div class="gf-menu" role="menu" aria-label="${esc(label)} options">
-            <button type="button" role="menuitem" class="gf-menu-item" data-act="toggle" disabled>Open folder</button>
-            <button type="button" role="menuitem" class="gf-menu-item" data-act="view" disabled>View project</button>
-          </div>
         </div>
       </div>`;
     if(empty){ root.querySelector('.gf-art').remove(); root.dataset.empty = ''; }
@@ -1957,54 +1921,32 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     });
 
     const hit = root.querySelector('.gf-hit');
-    const key = root.querySelector('.gf-key');
-    const menu = root.querySelector('.gf-menu');
-    const menuItems = [...menu.querySelectorAll('.gf-menu-item')];
-    let open = false, menuOpen = false;
+    let open = false, opening = 0;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function setOpen(next){
       open = next;
       root.toggleAttribute('data-open', open);
       hit.setAttribute('aria-expanded', open);
-      hit.setAttribute('aria-label', `${open ? 'Close' : 'Open'} ${label}, ${total} images`);
       filesEl.toggleAttribute('inert', !open);
-      menuItems[0].textContent = open ? 'Close folder' : 'Open folder';
+      if(!open){ clearTimeout(opening); opening = 0; }
       if(open) folders.forEach(f => f !== api && f.setOpen(false));
     }
-    function setMenu(next){
-      menuOpen = next;
-      menu.toggleAttribute('data-open', menuOpen);
-      key.setAttribute('aria-expanded', menuOpen);
-      menuItems.forEach(b => { b.disabled = !menuOpen; });
-      if(menuOpen) menuItems[0].focus();
-    }
     setOpen(false);
+    hit.setAttribute('aria-label', empty ? `${label}, coming soon` : `Open ${label}`);
     // an empty folder leans on hover but has nothing to fan out or open
-    if(empty){ key.style.display = 'none'; hit.setAttribute('aria-label', `${label}, coming soon`); hit.style.cursor = 'default'; }
-    hit.addEventListener('click', () => { if(empty) return; setMenu(false); setOpen(!open); });
-    key.addEventListener('click', () => setMenu(!menuOpen));
-    menuItems.forEach(b => b.addEventListener('click', () => {
-      setMenu(false); key.focus();
-      if(b.dataset.act === 'toggle') setOpen(!open); else { setOpen(false); openProject(row); }
-    }));
-    menu.addEventListener('keydown', (e) => {
-      const at = menuItems.indexOf(document.activeElement);
-      const go = (i) => { e.preventDefault(); menuItems[(i + menuItems.length) % menuItems.length].focus(); };
-      if(e.key === 'ArrowDown') go(at + 1);
-      else if(e.key === 'ArrowUp') go(at - 1);
-      else if(e.key === 'Home') go(0);
-      else if(e.key === 'End') go(menuItems.length - 1);
-      else if(e.key === 'Tab') setMenu(false);
+    if(empty) hit.style.cursor = 'default';
+    // click: the pictures fan out of the folder, then the gallery opens
+    hit.addEventListener('click', () => {
+      if(empty || opening) return;
+      setOpen(true);
+      opening = setTimeout(() => {
+        opening = 0;
+        openProject(row, 0);
+        setTimeout(() => setOpen(false), 400);
+      }, reduceMotion ? 0 : 750);
     });
-    document.addEventListener('keydown', (e) => {
-      if(e.key !== 'Escape') return;
-      if(menuOpen){ setMenu(false); key.focus(); }
-      else if(open){ setOpen(false); hit.focus(); }
-    });
-    document.addEventListener('pointerdown', (e) => {
-      if(menuOpen && !menu.contains(e.target) && !key.contains(e.target)) setMenu(false);
-      if(open && !menuOpen && !root.contains(e.target)) setOpen(false);
-    });
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && open) setOpen(false); });
 
     // light and parallax follow the cursor
     let raf = 0, px = 0, py = 0;
