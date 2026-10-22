@@ -1922,7 +1922,7 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
               <path d="${FRONT_PATH}" stroke="url(#gf-rim-${n})"/>
             </svg>
             <button type="button" class="gf-hit" aria-expanded="false"></button>
-            <div class="gf-label"><span class="gf-title">${esc(label)}</span><span class="gf-meta">${empty ? 'Coming soon' : `${total} ${total === 1 ? 'piece' : 'pieces'}`}</span></div>
+            <div class="gf-label"><span class="gf-title">${esc(label)}</span>${empty ? '<span class="gf-meta">Coming soon</span>' : ''}</div>
           </div>
           <div class="gf-files" role="list" aria-label="${esc(label)} contents" inert></div>
           <button type="button" class="gf-key" aria-label="More options for ${esc(label)}" aria-haspopup="menu" aria-expanded="false">
