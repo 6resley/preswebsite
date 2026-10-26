@@ -110,7 +110,8 @@
   }
   @media (prefers-reduced-motion: reduce){.xray-grain{animation:none;}}
   @media(max-width:900px){
-    .xray-leak{--leak-x:0px;}
+    .xray-leak{--leak-x:0px;transform:scale(0.42);transform-origin:0 35%;will-change:transform;}
+    .xray-leak.leak-flat .leak-blob{will-change:auto;}
     .xray-leak-unused{background:radial-gradient(ellipse 55% 42% at 0% 30%, rgba(226,212,198,0.85) 0%, rgba(190,186,178,0.4) 45%, rgba(120,130,130,0) 100%);}
   }
 
@@ -324,11 +325,7 @@
   .hero h1{font-size:clamp(2.5rem,6.4vw,5rem);max-width:16ch;}
   .hero h1 em{font-style:normal;color:var(--cobalt);}
   /* morphing headline: blur crossfade, thresholded into a gooey dissolve */
-  .tunnel-title::before{
-    content:'';position:absolute;left:50%;top:50%;width:min(1100px,130vw);height:min(560px,80vw);
-    transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
-    background:radial-gradient(ellipse closest-side, rgba(200,255,80,0.55) 0%, rgba(190,245,70,0.26) 42%, rgba(180,235,60,0) 100%);
-  }
+
   .hero h1.morph-text{
     position:relative;width:100%;max-width:none;height:1.12em;line-height:1;
     /* threshold dissolve, then halation: a bone bloom like the "3 BAITS" type */
@@ -340,6 +337,15 @@
     background:var(--grain-img) 0 0 / 90px 90px, #efe6d9;
     -webkit-background-clip:text;background-clip:text;
   }
+  /* motion ghosts: faint gaussian-blurred echoes above and below the headline, like the hook in the reference.
+     Kept outside the h1 so its threshold filter doesn't erase them; the morph script mirrors them frame by frame */
+  .morph-ghost{position:absolute;left:24px;right:24px;top:0;pointer-events:none;z-index:-1;}
+  .morph-ghost span{
+    position:absolute;left:0;right:0;top:0;white-space:nowrap;text-align:center;color:transparent;
+    text-shadow:0 -0.34em 16px rgba(242,232,218,0.34), 0 0.34em 16px rgba(242,232,218,0.34), 0 -0.62em 26px rgba(242,232,218,0.14), 0 0.62em 26px rgba(242,232,218,0.14);
+    transform:scaleX(1.04);
+  }
+  @media (prefers-reduced-motion: reduce){.morph-ghost{display:none;}}
   /* x-ray object standing behind the headline */
   .xray-pen{
     position:absolute;left:50%;top:50%;height:min(70vh,640px);width:auto;z-index:-2;pointer-events:none;
@@ -758,7 +764,7 @@
 </head>
 <body>
 
-<div class="xray-bg" aria-hidden="true"><div class="xray-leak"><i class="leak-blob" style="left:-20vw;top:-4vh;width:54vh;height:110vh;--c:232,218,204;--a:0.95"></i><i class="leak-blob" style="left:-9vw;top:-14vh;width:34vh;height:46vh;--c:238,226,212;--a:0.9"></i><i class="leak-blob" style="left:-9vw;top:30vh;width:30vh;height:42vh;--c:214,206,196;--a:0.7"></i><i class="leak-blob" style="left:-15vw;top:58vh;width:36vh;height:56vh;--c:190,188,182;--a:0.55"></i><i class="leak-blob" style="left:-2vw;top:12vh;width:16vh;height:70vh;--c:220,214,204;--a:0.3"></i><i class="leak-blob" style="left:-12vw;top:22vh;width:26vh;height:28vh;--c:244,234,222;--a:0.6"></i></div><canvas class="xray-film"></canvas></div>
+<div class="xray-bg" aria-hidden="true"><div class="xray-leak"><i class="leak-blob" style="left:-24vw;top:-8vh;width:78vh;height:124vh;--c:232,218,204;--a:0.95"></i><i class="leak-blob" style="left:-10vw;top:-16vh;width:50vh;height:58vh;--c:238,226,212;--a:0.9"></i><i class="leak-blob" style="left:-10vw;top:26vh;width:46vh;height:54vh;--c:214,206,196;--a:0.72"></i><i class="leak-blob" style="left:-18vw;top:56vh;width:54vh;height:70vh;--c:190,188,182;--a:0.58"></i><i class="leak-blob" style="left:0vw;top:8vh;width:24vh;height:84vh;--c:220,214,204;--a:0.32"></i><i class="leak-blob" style="left:-14vw;top:18vh;width:38vh;height:36vh;--c:244,234,222;--a:0.62"></i></div><canvas class="xray-film"></canvas></div>
 
 
 <aside class="sidebar">
@@ -784,6 +790,7 @@
     <div class="tunnel-stage">
       <div class="tunnel-title">
         <h1 class="morph-text" id="heroMorph" aria-label="Turn your vision into reality"><span aria-hidden="true"></span><span aria-hidden="true"></span></h1>
+        <div class="morph-ghost" aria-hidden="true"><span></span><span></span></div>
         <svg class="morph-defs" aria-hidden="true"><defs><filter id="heroMorphThreshold"><feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140"/></filter></defs></svg>
       </div>
 
@@ -2024,6 +2031,18 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   const root = document.getElementById('heroMorph');
   if(!root) return;
   const [el1, el2] = root.querySelectorAll('span');
+  const ghost = root.parentNode.querySelector('.morph-ghost');
+  const [g1, g2] = ghost ? ghost.querySelectorAll('span') : [];
+  // ghosts copy the headline's type so their echoes line up with the letters
+  const syncFont = () => {
+    if(!ghost) return;
+    const c = getComputedStyle(root);
+    ghost.style.font = c.font; ghost.style.letterSpacing = c.letterSpacing; ghost.style.wordSpacing = c.wordSpacing;
+    ghost.style.lineHeight = c.lineHeight; ghost.style.height = root.offsetHeight + 'px';
+  };
+  syncFont();
+  window.addEventListener('resize', syncFont);
+  if(document.fonts) document.fonts.ready.then(syncFont);
   const phrases = ['TURN YOUR', 'VISION', 'INTO REALITY'];
   const morphTime = 1.5, cooldownTime = 0.5;
   // without the threshold filter (phones), heavy blur reads as a smudge: keep it soft
@@ -2031,7 +2050,11 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
 
   const put = (el, text) => {
     if(el.textContent !== text) el.textContent = text;
+    const g = el === el1 ? g1 : el === el2 ? g2 : null;
+    if(g && g.textContent !== text) g.textContent = text;
   };
+  // ghosts fade with their phrase (no extra blur: theirs is already in the shadow)
+  const mirror = () => { if(g1){ g1.style.opacity = el1.style.opacity; g2.style.opacity = el2.style.opacity; } };
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     put(el1, phrases.join(' '));
     return;
@@ -2048,11 +2071,13 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
     el1.style.opacity = `${Math.pow(1 - fraction, 0.4) * 100}%`;
     put(el1, phrases[index % phrases.length]);
     put(el2, phrases[(index + 1) % phrases.length]);
+    mirror();
   };
   const doCooldown = () => {
     morph = 0;
     el2.style.filter = 'none'; el2.style.opacity = '100%';
     el1.style.filter = 'none'; el1.style.opacity = '0%';
+    mirror();
   };
   // while morphing, cooldown drifts negative by dt each frame, so morph -= cooldown advances it by dt
   const doMorph = () => {
@@ -2528,6 +2553,20 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
 (function(){
   const blobs = [...document.querySelectorAll('.leak-blob')];
   if(!blobs.length) return;
+  // phones: six large moving layers are too heavy to composite at 3x; the leak drifts as one flattened layer
+  if(window.matchMedia('(max-width: 900px), (hover: none)').matches){
+    const leak = blobs[0].parentNode;
+    leak.classList.add('leak-flat');
+    let ticking = false;
+    const move = () => {
+      ticking = false;
+      const q = window.scrollY / Math.max(1, window.innerHeight);
+      leak.style.transform = `translate3d(${(Math.sin(q * 0.9) * 2).toFixed(2)}vw,${(Math.cos(q * 0.7) * 4).toFixed(2)}vh,0) scale(0.42,${(0.42 + Math.sin(q * 1.1) * 0.03).toFixed(3)})`;
+    };
+    window.addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(move); } }, { passive: true });
+    move();
+    return;
+  }
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // each blob gets its own frequencies and amplitudes, so the shape keeps changing instead of sliding as one
   const params = blobs.map((_, i) => ({
