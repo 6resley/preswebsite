@@ -34,10 +34,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700;800;900&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#000000;
+    --bg:#0a1012;
     --line:rgba(255,255,255,0.14);
     --line-soft:rgba(255,255,255,0.08);
     --ink:#F4F2EC;
@@ -53,7 +53,7 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background:var(--bg);
+    background:#080c0d;
     color:var(--ink);
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -64,9 +64,9 @@
   img{max-width:100%;display:block;}
 
   h1,h2,h3,.display{
-    font-family:'Space Grotesk',sans-serif;
-    font-weight:700;
-    letter-spacing:-0.02em;
+    font-family:'Inter Tight','Space Grotesk',sans-serif;
+    font-weight:800;
+    letter-spacing:-0.025em;word-spacing:0.06em;
     line-height:1.02;
   }
   .mono{
@@ -99,6 +99,40 @@
     .reg-strip, .contact-divider{animation:none;}
   }
 
+  /* ---------- X-RAY FILM BACKGROUND: slate-teal glow, milky light leak, static grain ---------- */
+  .xray-bg{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(ellipse 20% 85% at calc(92px + 2%) 42%, rgba(240,238,230,0.5) 0%, rgba(220,222,214,0.22) 40%, rgba(205,210,204,0) 100%),
+      radial-gradient(ellipse 30% 40% at 104% 8%, rgba(190,205,200,0.08) 0%, rgba(190,205,200,0) 70%),
+      radial-gradient(ellipse 120% 95% at 55% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%),
+      radial-gradient(ellipse 70% 55% at 55% 45%, #34463f 0%, #22302f 30%, #141e1f 58%, #090d0e 100%);
+  }
+  .xray-bg::after{
+    content:'';position:absolute;inset:0;
+    background-image:var(--grain-img);background-size:160px 160px;opacity:0.07;
+  }
+  @media(max-width:900px){
+    .xray-bg{background:
+      radial-gradient(ellipse 60% 45% at -10% 30%, rgba(236,233,224,0.4) 0%, rgba(205,210,204,0) 70%),
+      radial-gradient(ellipse 90% 60% at 55% 45%, #2b3b3c 0%, #1a2627 40%, #0b1112 100%);}
+  }
+
+  /* spec annotations: a bold label over small print that's barely legible, like film markings */
+  .spec{
+    display:flex;flex-direction:column;gap:1px;max-width:300px;pointer-events:none;
+    font-family:'Inter',sans-serif;font-size:6.5px;line-height:1.45;letter-spacing:0.06em;
+    text-transform:uppercase;color:rgba(232,236,232,0.34);
+  }
+  .spec b{
+    font-family:'Inter Tight',sans-serif;font-weight:800;font-size:19px;letter-spacing:-0.02em;
+    line-height:1;margin-bottom:5px;color:rgba(232,236,232,0.52);text-transform:uppercase;
+  }
+  .spec span::before{content:'— ';opacity:0.6;}
+  .spec-hero{position:absolute;right:6%;bottom:18%;z-index:1;}
+  .spec-head{align-self:flex-end;}
+  @media(max-width:900px){.spec-hero{right:22px;bottom:96px;} .spec-head{display:none;}}
+
   /* ---------- FILM GRAIN OVERLAY ---------- */
   .grain-overlay{
     display:block;
@@ -109,7 +143,7 @@
     background-image:var(--grain-img);
     background-repeat:repeat;
     background-size:160px 160px;
-    opacity:0.045;
+    opacity:0.08;
     mix-blend-mode:screen;
     animation:grainFlicker 0.8s steps(8) infinite;
   }
@@ -136,7 +170,7 @@
     position:fixed;top:4px;left:0;width:92px;height:calc(100vh - 4px);
     border-right:1px solid var(--line-soft);
     display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-    padding:30px 0;z-index:200;background:var(--bg);
+    padding:30px 0;z-index:200;background:rgba(9,13,14,0.88);
   }
   .side-logo{
     width:34px;height:34px;color:var(--ink);
@@ -172,7 +206,7 @@
     .sidebar{
       width:100%;height:60px;flex-direction:row;padding:0 22px;
       border-right:none;border-bottom:1px solid var(--line-soft);
-      justify-content:space-between;
+      justify-content:space-between;background:rgba(10,15,16,0.92);
     }
     .side-nav{display:none;flex-direction:column;position:fixed;top:64px;right:16px;
       background:#000;border:1px solid var(--line);padding:18px 22px;gap:16px;z-index:250;}
@@ -325,6 +359,11 @@
   .hero h1{font-size:clamp(2.5rem,6.4vw,5rem);max-width:16ch;}
   .hero h1 em{font-style:normal;color:var(--cobalt);}
   /* morphing headline: blur crossfade, thresholded into a gooey dissolve */
+  .tunnel-title::before{
+    content:'';position:absolute;left:50%;top:50%;width:min(620px,90vw);height:min(300px,45vw);
+    transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse closest-side, rgba(230,24,32,0.75) 0%, rgba(210,20,28,0.38) 45%, rgba(200,20,28,0) 100%);
+  }
   .hero h1.morph-text{
     position:relative;width:100%;max-width:none;height:1.12em;line-height:1;
     filter:url(#heroMorphThreshold) blur(0.6px);
@@ -618,7 +657,7 @@
   /* ---------- MARQUEE ---------- */
   .marquee-wrap{
     border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
-    padding:26px 0;overflow:hidden;background:var(--bg);
+    padding:26px 0;overflow:hidden;background:transparent;
   }
   .marquee{display:flex;width:max-content;animation:scroll 32s linear infinite;}
   .marquee span{
@@ -658,7 +697,7 @@
     animation:stripShift 8s linear infinite;
     filter:grayscale(1);
   }
-  #contact{background:var(--bg);padding:110px 60px;}
+  #contact{background:transparent;padding:110px 60px;}
   @media(max-width:900px){#contact{padding:70px 24px;}}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
   @media(max-width:900px){.contact-grid{grid-template-columns:1fr;gap:50px;}}
@@ -701,7 +740,7 @@
   .hwf-root{
     --hwf-bg:#0c0c0b;--hwf-ink:#e9e4da;--hwf-mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
     position:relative;width:100%;height:440px;overflow:hidden;isolation:isolate;
-    background:var(--hwf-bg);color:var(--hwf-ink);-webkit-font-smoothing:antialiased;
+    background:transparent;color:var(--hwf-ink);-webkit-font-smoothing:antialiased;
     border-top:1px solid var(--line-soft);
   }
   @media(max-width:720px){.hwf-root{height:400px;}}
@@ -745,6 +784,7 @@
 </head>
 <body>
 
+<div class="xray-bg" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
 
 <div class="reg-strip" aria-hidden="true"></div>
@@ -775,6 +815,7 @@
         <svg class="morph-defs" aria-hidden="true"><defs><filter id="heroMorphThreshold"><feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -140"/></filter></defs></svg>
       </div>
 
+      <div class="spec spec-hero" aria-hidden="true"><b>PJ 2.0</b><span>Graphic design studio of Presley Jackson</span><span>Brand identity / logo systems / marks</span><span>Advertising / campaigns / product ads</span><span>Merch / apparel graphics / tour goods</span><span>Posters / social media / website design</span><span>Concept · sketch · refine · deliver</span><span>Scroll to fly through the archive</span></div>
       <div class="tunnel-prompt mono" aria-hidden="true"><span>Scroll to explore</span><i></i></div>
       <div class="tunnel-space" id="tunnelSpace"></div>
     </div>
@@ -796,7 +837,7 @@
           <button type="button" class="tag-pill" data-goto="basin-studio-reel-kit"><i style="background:var(--coral);"></i>Posters</button>
         </div>
       </div>
-      <div class="count mono" id="projectCount">07 Projects</div>
+      <div class="spec-head"><div class="spec" aria-hidden="true"><b>Index 07</b><span>Merch</span><span>Advertisements</span><span>Websites</span><span>Brand identity</span><span>Social media</span><span>Posters</span><span>Photography</span></div><div class="count mono" id="projectCount" style="margin-top:14px;">07 Projects</div></div>
     </div>
 
     <div class="work-list" id="workList">
@@ -895,6 +936,7 @@
         <div class="tag mono"><span class="chip" style="background:var(--violet);"></span>About</div>
         <h2>CREATIVE WITHOUT LIMITS.</h2>
       </div>
+      <div class="spec spec-head" aria-hidden="true"><b>PJ / Bio</b><span>Designer · art director · maker</span><span>Identity, campaigns, apparel, web</span><span>One person, start to finish</span><span>Every project, the same standard</span></div>
     </div>
 
     <div class="about-grid" style="margin-top:56px;">
@@ -929,6 +971,7 @@ I believe good design isn't just about looking great—it's about making people 
         <div class="tag mono"><span class="chip" style="background:var(--yellow);"></span>Contact</div>
         <h2>Have a vision? Let’s bring it to life.</h2>
       </div>
+      <div class="spec spec-head" aria-hidden="true"><b>Transmit</b><span>Fill out the form or email directly</span><span>hello.presjackson@gmail.com</span><span>Tell me what you are building</span><span>Sketches welcome</span></div>
     </div>
 
     <div class="contact-grid" style="margin-top:56px;">
@@ -2303,8 +2346,8 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
 
   function draw(now){
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = COLORS.background;
-    ctx.fillRect(0, 0, w, h);
+    // transparent: the x-ray film background shows through between the dots
+    ctx.clearRect(0, 0, w, h);
     const r = reduced ? 0 : RADIUS;
     const ringAge = ring.t < 0 ? 1e9 : now - ring.t;
     const ringR = ringAge * 0.9;
