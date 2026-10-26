@@ -37,7 +37,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700;800;900&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a1012;
+    --bg:#0a1a1c;
     --line:rgba(255,255,255,0.14);
     --line-soft:rgba(255,255,255,0.08);
     --ink:#F4F2EC;
@@ -53,7 +53,7 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background:#080c0d;
+    background:#0a1a1c;
     color:var(--ink);
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -99,24 +99,39 @@
     .reg-strip, .contact-divider{animation:none;}
   }
 
-  /* ---------- X-RAY FILM BACKGROUND: slate-teal glow, milky light leak, static grain ---------- */
+  /* ---------- X-RAY FILM BACKGROUND (colors sampled from the reference) ----------
+     static base + slowly breathing light leak + an animated film canvas (grain, dust, scratches, flicker) */
   .xray-bg{
-    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
     background:
-      radial-gradient(ellipse 20% 85% at calc(92px + 2%) 42%, rgba(240,238,230,0.5) 0%, rgba(220,222,214,0.22) 40%, rgba(205,210,204,0) 100%),
-      radial-gradient(ellipse 30% 40% at 104% 8%, rgba(190,205,200,0.08) 0%, rgba(190,205,200,0) 70%),
-      radial-gradient(ellipse 120% 95% at 55% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%),
-      radial-gradient(ellipse 70% 55% at 55% 45%, #34463f 0%, #22302f 30%, #141e1f 58%, #090d0e 100%);
+      linear-gradient(to bottom, rgba(7,7,7,0) 70%, rgba(7,7,7,0.8) 90%, #070707 100%),
+      radial-gradient(ellipse 42% 38% at 100% 0%, rgba(84,104,104,0.6) 0%, rgba(84,104,104,0) 70%),
+      radial-gradient(ellipse 24% 26% at 70% 30%, rgba(4,18,20,0.75) 0%, rgba(4,18,20,0) 70%),
+      radial-gradient(ellipse 30% 22% at 44% 20%, rgba(6,24,27,0.5) 0%, rgba(6,24,27,0) 70%),
+      linear-gradient(to bottom, #3b5054 0%, #1e373b 28%, #13292d 58%, #0a1a1c 80%);
   }
-  .xray-bg::after{
-    content:'';position:absolute;inset:0;
-    background-image:var(--grain-img);background-size:160px 160px;opacity:0.07;
+  .xray-leak{
+    position:absolute;inset:-6%;
+    background:radial-gradient(ellipse 30% 75% at calc(92px + 4%) 38%, rgba(232,218,204,1) 0%, rgba(214,204,194,0.85) 30%, rgba(160,162,158,0.38) 60%, rgba(120,130,130,0) 100%);
+    animation:leakBreathe 16s ease-in-out infinite alternate;will-change:transform,opacity;
   }
+  @keyframes leakBreathe{
+    0%{opacity:0.82;transform:translate3d(-1.5%,1%,0) scale(1);}
+    50%{opacity:1;transform:translate3d(0.5%,-1%,0) scale(1.05);}
+    100%{opacity:0.9;transform:translate3d(-0.5%,2%,0) scale(1.02);}
+  }
+  .xray-mottle{position:absolute;inset:0;background-size:100% 100%;opacity:0.55;}
+  .xray-film{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .xray-grain{position:absolute;inset:-128px;background-size:128px 128px;opacity:0.9;animation:grainJitter .75s steps(1) infinite;will-change:transform;}
+  @keyframes grainJitter{
+    0%{transform:translate3d(0,0,0);} 17%{transform:translate3d(-37px,21px,0);} 33%{transform:translate3d(52px,-44px,0);}
+    50%{transform:translate3d(-18px,-63px,0);} 67%{transform:translate3d(71px,30px,0);} 83%{transform:translate3d(-60px,58px,0);}
+  }
+  @media (prefers-reduced-motion: reduce){.xray-grain{animation:none;}}
   @media(max-width:900px){
-    .xray-bg{background:
-      radial-gradient(ellipse 60% 45% at -10% 30%, rgba(236,233,224,0.4) 0%, rgba(205,210,204,0) 70%),
-      radial-gradient(ellipse 90% 60% at 55% 45%, #2b3b3c 0%, #1a2627 40%, #0b1112 100%);}
+    .xray-leak{background:radial-gradient(ellipse 55% 42% at 0% 30%, rgba(226,212,198,0.85) 0%, rgba(190,186,178,0.4) 45%, rgba(120,130,130,0) 100%);}
   }
+  @media (prefers-reduced-motion: reduce){.xray-leak{animation:none;}}
 
   /* spec annotations: a bold label over small print that's barely legible, like film markings */
   .spec{
@@ -133,36 +148,8 @@
   .spec-head{align-self:flex-end;}
   @media(max-width:900px){.spec-hero{right:22px;bottom:96px;} .spec-head{display:none;}}
 
-  /* ---------- FILM GRAIN OVERLAY ---------- */
-  .grain-overlay{
-    display:block;
-    position:fixed;
-    inset:0;
-    z-index:500;
-    pointer-events:none;
-    background-image:var(--grain-img);
-    background-repeat:repeat;
-    background-size:160px 160px;
-    opacity:0.08;
-    mix-blend-mode:screen;
-    animation:grainFlicker 0.8s steps(8) infinite;
-  }
-  /* phones: a full-screen blended, animated grain layer over the 3D tunnel is the biggest frame cost */
   @media(max-width:900px), (hover:none){
-    .grain-overlay{display:none;}
     .reg-strip, .contact-divider{animation:none;}
-  }
-  @keyframes grainFlicker{
-    0%,100%{background-position:0 0;}
-    10%{background-position:-4% -8%;}
-    20%{background-position:-12% 4%;}
-    30%{background-position:6% -20%;}
-    40%{background-position:-4% 20%;}
-    50%{background-position:-12% 8%;}
-    60%{background-position:12% 0;}
-    70%{background-position:0 12%;}
-    80%{background-position:3% 28%;}
-    90%{background-position:-8% 8%;}
   }
 
   /* ---------- SIDEBAR ---------- */
@@ -170,7 +157,7 @@
     position:fixed;top:4px;left:0;width:92px;height:calc(100vh - 4px);
     border-right:1px solid var(--line-soft);
     display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-    padding:30px 0;z-index:200;background:rgba(9,13,14,0.88);
+    padding:30px 0;z-index:200;background:rgba(5,13,15,0.9);
   }
   .side-logo{
     width:34px;height:34px;color:var(--ink);
@@ -206,7 +193,7 @@
     .sidebar{
       width:100%;height:60px;flex-direction:row;padding:0 22px;
       border-right:none;border-bottom:1px solid var(--line-soft);
-      justify-content:space-between;background:rgba(10,15,16,0.92);
+      justify-content:space-between;background:rgba(5,13,15,0.92);
     }
     .side-nav{display:none;flex-direction:column;position:fixed;top:64px;right:16px;
       background:#000;border:1px solid var(--line);padding:18px 22px;gap:16px;z-index:250;}
@@ -784,8 +771,7 @@
 </head>
 <body>
 
-<div class="xray-bg" aria-hidden="true"></div>
-<div class="grain-overlay" aria-hidden="true"></div>
+<div class="xray-bg" aria-hidden="true"><div class="xray-leak"></div><canvas class="xray-film"></canvas></div>
 
 <div class="reg-strip" aria-hidden="true"></div>
 
@@ -2413,6 +2399,141 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   new IntersectionObserver((entries) => { visible = entries[0] ? entries[0].isIntersecting : true; if(visible) wake(); }).observe(root);
   // a web font that lands late re-sets the word in its real face
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout(); wake(); });
+})();
+</script>
+
+<script>
+/* ---------- x-ray film: animated grain, dust, scratches and flicker behind the content ---------- */
+(function(){
+  const bg = document.querySelector('.xray-bg');
+  const canvas = bg && bg.querySelector('.xray-film');
+  const ctx = canvas && canvas.getContext('2d');
+  if(!ctx) return;
+  const small = window.matchMedia('(max-width: 900px), (hover: none)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FPS = small ? 8 : 12;            // film cadence, not screen cadence
+  const SCALE = small ? 0.5 : 1;         // phones: half-res buffer for dust/scratches; grain moves to a GPU layer
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  // a few pre-rendered grain tiles, cycled with random offsets every frame
+  const tiles = Array.from({ length: 5 }, () => {
+    const t = document.createElement('canvas');
+    t.width = t.height = 256;
+    const g = t.getContext('2d'), id = g.createImageData(256, 256), d = id.data;
+    for(let i = 0; i < d.length; i += 4){
+      const v = (Math.random() + Math.random() + Math.random()) / 3 - 0.5;   // soft bell curve
+      const light = v > 0;
+      d[i] = d[i + 1] = d[i + 2] = light ? 232 : 0;
+      d[i + 3] = Math.min(255, Math.abs(v) * (light ? 150 : 210));
+    }
+    g.putImageData(id, 0, 0);
+    return t;
+  });
+  const patterns = tiles.map(t => ctx.createPattern(t, 'repeat'));
+  // phones: grain as a full-res CSS layer jittered by a compositor-only animation
+  if(small){
+    const gr = document.createElement('div');
+    gr.className = 'xray-grain';
+    gr.style.backgroundImage = `url(${tiles[0].toDataURL()})`;
+    bg.appendChild(gr);
+  }
+
+  // static low-frequency mottle: the cloudy unevenness of developed film
+  (function mottle(){
+    const m = document.createElement('canvas');
+    m.width = 48; m.height = 27;
+    const g = m.getContext('2d'), id = g.createImageData(48, 27), d = id.data;
+    for(let i = 0; i < d.length; i += 4){
+      const v = Math.random();
+      d[i] = d[i + 1] = d[i + 2] = v > 0.5 ? 210 : 0;
+      d[i + 3] = Math.abs(v - 0.5) * (v > 0.5 ? 60 : 120);
+    }
+    g.putImageData(id, 0, 0);
+    const el = document.createElement('div');
+    el.className = 'xray-mottle';
+    el.style.backgroundImage = `url(${m.toDataURL()})`;
+    el.style.imageRendering = 'auto';
+    el.style.filter = 'blur(30px)';
+    bg.insertBefore(el, canvas);
+  })();
+
+  let w = 0, h = 0;
+  const resize = () => {
+    w = Math.max(1, Math.round(window.innerWidth * SCALE));
+    h = Math.max(1, Math.round(window.innerHeight * SCALE));
+    canvas.width = w; canvas.height = h;
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
+  // scratches live for a handful of frames and wander a little
+  let scratches = [];
+  const overlay = document.getElementById('modalOverlay');
+
+  function frame(){
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    // exposure flicker
+    const f = rand(-1, 1);
+    ctx.fillStyle = f > 0 ? `rgba(230,225,215,${f * 0.03})` : `rgba(0,0,0,${-f * 0.05})`;
+    ctx.fillRect(0, 0, w, h);
+
+    // grain
+    if(!small){
+      ctx.save();
+      ctx.translate(-rand(0, 256), -rand(0, 256));
+      ctx.fillStyle = patterns[(Math.random() * patterns.length) | 0];
+      ctx.globalAlpha = 0.9;
+      ctx.fillRect(0, 0, w + 256, h + 256);
+      ctx.restore();
+    }
+
+    // dust: specks change every frame, like dirt on a projected print
+    const k = SCALE;
+    const specks = (rand(6, 16) * (w * h) / (1440 * 900 * k * k)) | 0;
+    for(let i = 0; i < specks; i++){
+      const r = rand(0.4, Math.random() < 0.15 ? 2.6 : 1.3) * k * 1.4;
+      ctx.fillStyle = Math.random() < 0.8 ? `rgba(236,230,220,${rand(0.35, 0.85)})` : `rgba(0,0,0,${rand(0.3, 0.6)})`;
+      ctx.beginPath(); ctx.arc(rand(0, w), rand(0, h), r, 0, 6.283); ctx.fill();
+    }
+    // the odd hair
+    if(Math.random() < 0.18){
+      const x = rand(0, w), y = rand(0, h), len = rand(12, 46) * k;
+      ctx.strokeStyle = `rgba(236,230,220,${rand(0.25, 0.55)})`;
+      ctx.lineWidth = rand(0.6, 1.1) * k;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x + rand(-len, len), y + rand(-len, len), x + rand(-len, len), y + rand(-len, len), x + rand(-len, len), y + rand(-len, len));
+      ctx.stroke();
+    }
+
+    // vertical scratches
+    if(Math.random() < 0.06 && scratches.length < 2) scratches.push({ x: rand(0.05, 0.95) * w, life: (rand(3, 9)) | 0, a: rand(0.08, 0.22), top: rand(-0.2, 0.4) * h, bot: rand(0.6, 1.2) * h });
+    scratches = scratches.filter(s => s.life-- > 0);
+    for(const s of scratches){
+      s.x += rand(-1.5, 1.5) * k;
+      const g = ctx.createLinearGradient(0, s.top, 0, s.bot);
+      g.addColorStop(0, 'rgba(236,230,220,0)');
+      g.addColorStop(0.3, `rgba(236,230,220,${s.a})`);
+      g.addColorStop(0.7, `rgba(236,230,220,${s.a * 0.7})`);
+      g.addColorStop(1, 'rgba(236,230,220,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(s.x, s.top, Math.max(1, 1 * k), s.bot - s.top);
+    }
+  }
+
+  frame();
+  if(reduce) return;
+  let last = 0;
+  const loop = (now) => {
+    requestAnimationFrame(loop);
+    if(now - last < 1000 / FPS) return;
+    last = now;
+    // nothing to see behind a hidden tab or an open project
+    if(document.hidden || (overlay && overlay.classList.contains('open'))) return;
+    frame();
+  };
+  requestAnimationFrame(loop);
 })();
 </script>
 
