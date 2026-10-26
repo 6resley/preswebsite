@@ -95,12 +95,10 @@
       radial-gradient(ellipse 30% 22% at 44% 20%, rgba(6,24,27,0.5) 0%, rgba(6,24,27,0) 70%),
       linear-gradient(to bottom, #3b5054 0%, #1e373b 28%, #13292d 58%, #0a1a1c 80%);
   }
-  /* light leak: overlapping soft blobs that drift and swell with scroll, so the edge stays irregular */
-  .xray-leak{position:absolute;top:0;bottom:0;left:var(--leak-x,92px);width:60vw;pointer-events:none;}
-  .leak-blob{
-    position:absolute;border-radius:50%;will-change:transform;
-    background:radial-gradient(closest-side, rgba(var(--c),var(--a)) 0%, rgba(var(--c),calc(var(--a) * 0.55)) 45%, rgba(var(--c),0) 100%);
-  }
+  /* light leak: a soft band of light off the left edge with a ragged inner edge, painted on a tiny canvas
+     (upscaled, so it stays soft) and re-shaped as you scroll */
+  .xray-leak{position:absolute;top:0;bottom:0;left:0;width:42vw;pointer-events:none;}
+  .xray-leak canvas{width:100%;height:100%;display:block;}
   .xray-mottle{position:absolute;inset:0;background-size:100% 100%;opacity:0.55;}
   .xray-film{position:absolute;inset:0;width:100%;height:100%;display:block;}
   .xray-grain{position:absolute;inset:-128px;background-size:86px 86px;opacity:0.9;animation:grainJitter .75s steps(1) infinite;will-change:transform;}
@@ -110,9 +108,7 @@
   }
   @media (prefers-reduced-motion: reduce){.xray-grain{animation:none;}}
   @media(max-width:900px){
-    .xray-leak{--leak-x:0px;transform:scale(0.42);transform-origin:0 35%;will-change:transform;}
-    .xray-leak.leak-flat .leak-blob{will-change:auto;}
-    .xray-leak-unused{background:radial-gradient(ellipse 55% 42% at 0% 30%, rgba(226,212,198,0.85) 0%, rgba(190,186,178,0.4) 45%, rgba(120,130,130,0) 100%);}
+    .xray-leak{--leak-x:0px;width:70vw;}
   }
 
   /* spec annotations: a bold label over small print that's barely legible, like film markings */
@@ -133,10 +129,10 @@
 
   /* ---------- SIDEBAR ---------- */
   .sidebar{
-    position:fixed;top:4px;left:0;width:92px;height:calc(100vh - 4px);
+    position:fixed;top:0;left:0;width:92px;height:100vh;
     border-right:none;
     display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-    padding:30px 0;z-index:200;background:rgba(5,13,15,0.9);
+    padding:30px 0;z-index:200;background:transparent;
   }
   .side-logo{
     width:34px;height:34px;color:var(--ink);
@@ -144,6 +140,13 @@
     transition:color .25s ease, transform .25s ease;
   }
   .side-logo:hover{color:var(--cobalt);transform:translateY(-1px);}
+  @media(min-width:901px){
+    .sidebar .side-logo, .sidebar .side-nav a, .sidebar .side-status, .sidebar .side-status span.txt{color:#c8ff50;}
+    /* a soft dark halo keeps lime legible over the bright leak */
+    .sidebar .side-nav a, .sidebar .side-status{text-shadow:0 0 6px rgba(5,13,15,0.9),0 0 14px rgba(5,13,15,0.6);}
+    .sidebar .side-logo svg{filter:drop-shadow(0 0 5px rgba(5,13,15,0.9));}
+    .sidebar .side-nav a:hover, .sidebar .side-logo:hover{color:#f2e8db;}
+  }
   .side-nav{display:flex;flex-direction:column;align-items:center;gap:30px;}
   .side-nav a{
     font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;
@@ -764,7 +767,7 @@
 </head>
 <body>
 
-<div class="xray-bg" aria-hidden="true"><div class="xray-leak"><i class="leak-blob" style="left:-24vw;top:-8vh;width:78vh;height:124vh;--c:232,218,204;--a:0.95"></i><i class="leak-blob" style="left:-10vw;top:-16vh;width:50vh;height:58vh;--c:238,226,212;--a:0.9"></i><i class="leak-blob" style="left:-10vw;top:26vh;width:46vh;height:54vh;--c:214,206,196;--a:0.72"></i><i class="leak-blob" style="left:-18vw;top:56vh;width:54vh;height:70vh;--c:190,188,182;--a:0.58"></i><i class="leak-blob" style="left:0vw;top:8vh;width:24vh;height:84vh;--c:220,214,204;--a:0.32"></i><i class="leak-blob" style="left:-14vw;top:18vh;width:38vh;height:36vh;--c:244,234,222;--a:0.62"></i></div><canvas class="xray-film"></canvas></div>
+<div class="xray-bg" aria-hidden="true"><div class="xray-leak"><canvas width="72" height="144"></canvas></div><canvas class="xray-film"></canvas></div>
 
 
 <aside class="sidebar">
@@ -2549,62 +2552,61 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
 </script>
 
 <script>
-/* ---------- light leak: fluid drift driven by scroll (springs) plus a slow idle breath ---------- */
+/* ---------- light leak: band off the left edge, matched to the reference; its edge flows with scroll ---------- */
 (function(){
-  const blobs = [...document.querySelectorAll('.leak-blob')];
-  if(!blobs.length) return;
-  // phones: six large moving layers are too heavy to composite at 3x; the leak drifts as one flattened layer
-  if(window.matchMedia('(max-width: 900px), (hover: none)').matches){
-    const leak = blobs[0].parentNode;
-    leak.classList.add('leak-flat');
-    let ticking = false;
-    const move = () => {
-      ticking = false;
-      const q = window.scrollY / Math.max(1, window.innerHeight);
-      leak.style.transform = `translate3d(${(Math.sin(q * 0.9) * 2).toFixed(2)}vw,${(Math.cos(q * 0.7) * 4).toFixed(2)}vh,0) scale(0.42,${(0.42 + Math.sin(q * 1.1) * 0.03).toFixed(3)})`;
-    };
-    window.addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(move); } }, { passive: true });
-    move();
-    return;
-  }
+  const canvas = document.querySelector('.xray-leak canvas');
+  const ctx = canvas && canvas.getContext('2d');
+  if(!ctx) return;
+  const W = canvas.width, H = canvas.height;
+  const img = ctx.createImageData(W, H), d = img.data;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // each blob gets its own frequencies and amplitudes, so the shape keeps changing instead of sliding as one
-  const params = blobs.map((_, i) => ({
-    fx: 0.55 + i * 0.23, fy: 0.4 + ((i * 37) % 7) * 0.11, fr: 0.3 + i * 0.17, fs: 0.5 + ((i * 13) % 5) * 0.15,
-    ax: 1.2 + (i % 3) * 0.8, ay: 5 + ((i + 1) % 4) * 2.5, ar: 8 + i * 3, as: 0.08 + (i % 3) * 0.05,
-    ph: i * 1.7,
-  }));
-  let target = 0, pos = 0, vel = 0, raf = 0, last = 0, idle = 0;
-  const read = () => { target = window.scrollY / Math.max(1, window.innerHeight); kick(); };
-  function apply(t){
-    blobs.forEach((b, i) => {
-      const p = params[i], q = pos + t * 0.06;   // scroll does most of the work; time keeps it breathing
-      const x = Math.sin(q * p.fx + p.ph) * p.ax;
-      const y = Math.cos(q * p.fy + p.ph * 0.7) * p.ay;
-      const r = Math.sin(q * p.fr + p.ph) * p.ar;
-      const s = 1 + Math.sin(q * p.fs + p.ph * 1.3) * p.as;
-      b.style.transform = `translate3d(${x.toFixed(2)}vw,${y.toFixed(2)}vh,0) rotate(${r.toFixed(1)}deg) scale(${s.toFixed(3)},${(2 - s).toFixed(3)})`;
-    });
+  // phones: repaint the leak at most ~15 times a second (re-uploading its layer every frame is the cost)
+  const minGap = window.matchMedia('(max-width: 900px), (hover: none)').matches ? 66 : 0;
+  let lastPaint = 0;
+  const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  // smooth 1D noise from a few incommensurate sines
+  const n = (x) => Math.sin(x) * 0.5 + Math.sin(x * 2.17 + 1.3) * 0.3 + Math.sin(x * 4.71 + 2.9) * 0.2;
+
+  function paint(ph){
+    for(let y = 0; y < H; y++){
+      const v = y / H;
+      // reach of the light at this height, as a fraction of the canvas: ragged, widest around the middle
+      const reach = 0.34 + 0.1 * Math.sin(v * 3.1 + 0.4) + 0.09 * n(v * 5 + ph) + 0.05 * n(v * 13 - ph * 1.6);
+      // brightness down the frame: strong through the upper two thirds, falling off to the dark bottom band
+      const vert = (1 - smooth(0.68, 0.9, v)) * (0.88 + 0.12 * n(v * 4 - ph * 0.7)) * (0.92 + 0.08 * smooth(0, 0.25, v));
+      for(let x = 0; x < W; x++){
+        const u = x / W;
+        // bright core at the edge, long soft falloff to the ragged reach
+        const fall = 1 - smooth(0, reach * 1.15, u + 0.05 * n(u * 9 + v * 6 + ph));
+        const a = Math.pow(fall, 1.7) * vert;
+        const i = (y * W + x) * 4;
+        // cream at the core, cooling to grey-green as it thins (sampled #e1d1c4 -> #929694)
+        d[i] = 146 + 82 * fall; d[i + 1] = 150 + 60 * fall; d[i + 2] = 148 + 48 * fall;
+        d[i + 3] = a * 245;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
   }
+
+  let target = 0, pos = 0, vel = 0, raf = 0, last = 0;
+  const read = () => { target = window.scrollY / Math.max(1, window.innerHeight) * 0.9; kick(); };
   function frame(now){
     raf = 0;
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
     last = now;
-    // underdamped spring: the leak keeps flowing briefly after scrolling stops, like liquid settling
+    // underdamped spring: the edge keeps flowing briefly after scrolling stops
     vel += ((target - pos) * 14 - vel * 5.5) * dt;
     pos += vel * dt;
-    apply(now / 1000);
-    const moving = Math.abs(target - pos) > 0.0005 || Math.abs(vel) > 0.0005;
-    // while still, breathe at a gentle 20fps instead of every frame
-    if(moving){ idle = 0; raf = requestAnimationFrame(frame); }
-    else { idle = setTimeout(() => { last = 0; kick(); }, 50); }
+    if(now - lastPaint >= minGap){ lastPaint = now; paint(pos + now / 1000 * 0.05); }
+    if(Math.abs(target - pos) > 0.0005 || Math.abs(vel) > 0.0005) raf = requestAnimationFrame(frame);
+    else { last = 0; setTimeout(kick, 80); }   // slow idle drift, ~12fps
   }
-  function kick(){ if(!raf){ clearTimeout(idle); raf = requestAnimationFrame(frame); } }
-  read();
-  pos = target;
-  if(reduce){ apply(0); return; }
+  function kick(){ if(!raf && !document.hidden) raf = requestAnimationFrame(frame); }
+  read(); pos = target;
+  paint(pos);
+  if(reduce) return;
   window.addEventListener('scroll', read, { passive: true });
-  document.addEventListener('visibilitychange', () => { if(!document.hidden) kick(); });
+  document.addEventListener('visibilitychange', kick);
   kick();
 })();
 </script>
