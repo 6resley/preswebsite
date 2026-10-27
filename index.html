@@ -688,6 +688,8 @@
   .contact-info h2{font-size:clamp(2rem,4.2vw,2.8rem);margin-bottom:22px;}
   .contact-info p{color:var(--ink-soft);line-height:1.65;max-width:44ch;margin-bottom:36px;}
   .contact-direct{display:flex;flex-direction:column;gap:18px;}
+  svg.arr{width:15px;height:15px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s ease;}
+  .contact-direct a:hover svg.arr{transform:translate(2px,-2px);}
   .contact-direct a{
     display:flex;align-items:center;justify-content:space-between;
     padding-bottom:14px;font-size:1.05rem;transition:color .25s ease, padding-left .25s ease;
@@ -834,7 +836,7 @@
           <span class="row-tags mono">MERCH</span>
         </div>
         <span class="row-dot" style="background:var(--cobalt);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-2" data-project="field-notes-quarterly">
@@ -845,7 +847,7 @@
           <span class="row-tags mono">ADVERTISEMENTS</span>
         </div>
         <span class="row-dot" style="background:var(--red);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-3" data-project="ledger-budgeting-app">
@@ -856,7 +858,7 @@
           <span class="row-tags mono">WEBSITES</span>
         </div>
         <span class="row-dot" style="background:var(--yellow);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-4" data-project="hollow-and-rind-skincare">
@@ -867,7 +869,7 @@
           <span class="row-tags mono">BRAND IDENTITY</span>
         </div>
         <span class="row-dot" style="background:var(--mint);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-5" data-project="mile-marker-podcast">
@@ -878,7 +880,7 @@
           <span class="row-tags mono">SOCIAL MEDIA</span>
         </div>
         <span class="row-dot" style="background:var(--violet);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-6" data-project="basin-studio-reel-kit">
@@ -889,7 +891,7 @@
           <span class="row-tags mono">POSTERS</span>
         </div>
         <span class="row-dot" style="background:var(--coral);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
 
       <div class="work-row in" data-art="art-7" data-project="photography">
@@ -900,7 +902,7 @@
           <span class="row-tags mono">PHOTOGRAPHY</span>
         </div>
         <span class="row-dot" style="background:var(--ink);"></span>
-        <span class="row-arrow">↗</span>
+        <span class="row-arrow"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></span>
       </div>
     </div>
     <div class="folder-grid" id="folderGrid"></div>
@@ -964,25 +966,22 @@ I believe good design isn't just about looking great—it's about making people 
         <p>Share a few details about what you're working on, your ideal timeline, and what you want to achieve—or use the sketchpad on the right to doodle your thoughts. I reply within two business days.</p>
         <div class="contact-direct">
           <a href="mailto:hello.presjackson@gmail.com">
-            <span><span class="label">Email</span>hello.presjackson@gmail.com</span><span>↗</span>
+            <span><span class="label">Email</span>hello.presjackson@gmail.com</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
           <a href="https://instagram.com/Pres.Matic" target="_blank" rel="noopener">
-            <span><span class="label">Instagram</span>@Pres.Matic</span><span>↗</span>
+            <span><span class="label">Instagram</span>@Pres.Matic</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
           <a href="https://www.linkedin.com/in/presley-jackson/" target="_blank" rel="noopener">
-            <span><span class="label">LinkedIn</span>@PresleyJackson</span><span>↗</span>
+            <span><span class="label">LinkedIn</span>@PresleyJackson</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
           <a href="https://www.behance.net/6resley" target="_blank" rel="noopener">
-            <span><span class="label">Behance</span>@6resley</span><span>↗</span>
+            <span><span class="label">Behance</span>@6resley</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
           <a href="https://x.com/6resley" target="_blank" rel="noopener">
-            <span><span class="label">X</span>@6resley</span><span>↗</span>
+            <span><span class="label">X</span>@6resley</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
           <a href="https://www.youtube.com/@6res" target="_blank" rel="noopener">
-            <span><span class="label">YouTube</span>@6res</span><span>↗</span>
-          </a>
-          <a href="tel:+15187790330">
-            <span><span class="label">Phone</span>(518)779-0330</span><span>↗</span>
+            <span><span class="label">YouTube</span>@6res</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg>
           </a>
         </div>
       </div>
@@ -2275,7 +2274,8 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   const WORD = 'PRESLEY';
   const COLORS = { background: '#0c0c0b', ink: '#c8ff50', warm: '#f2e8db' };   // lime, from the Nays reference
   // half the word hangs below the bottom edge: it's a graphic element, not a label
-  const DOT_GAP = 6, RADIUS = 80, CROP = 0.5, GRAIN = 0.5, GAP = 28;
+  // no grain of its own: the page's film grain covers the footer, and a footer-only layer left a visible edge
+  const DOT_GAP = 6, RADIUS = 80, CROP = 0.5, GRAIN = 0, GAP = 28;
   const FONT_WEIGHT = 800, FONT = '"Inter Tight", "Inter", "Helvetica Neue", Arial, system-ui, sans-serif';
 
   const hex = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h); return m ? [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16)) : null; };
