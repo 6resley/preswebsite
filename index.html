@@ -670,6 +670,21 @@
   .about-copy p strong{color:var(--ink);font-weight:600;}
   .about-copy .signoff{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;color:var(--ink);margin-top:30px;}
 
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 48px;margin-top:110px;}
+  .stat{position:relative;padding:78px 0 30px;}
+  .stat-corner{position:absolute;top:0;right:14%;width:30px;height:16px;border-top:1.5px solid var(--ink);border-right:1.5px solid var(--ink);opacity:0.85;}
+  .stat-num{
+    font-family:'Space Mono',monospace;font-weight:400;font-size:clamp(3.2rem,6.4vw,5.6rem);line-height:1;
+    letter-spacing:-0.05em;color:var(--ink);font-variant-numeric:tabular-nums slashed-zero;
+  }
+  .stat-num .lime{color:#c8ff50;}
+  .stat p{margin-top:24px;font-size:1.08rem;line-height:1.5;color:var(--ink-soft);max-width:22ch;}
+  @media(max-width:900px){
+    .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 28px;margin-top:70px;}
+    .stat{padding:58px 0 24px;}
+    .stat-corner{right:8%;}
+    .stat p{font-size:0.98rem;}
+  }
   .skill-list{margin-top:44px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 40px;}
   @media(max-width:520px){.skill-list{grid-template-columns:1fr;}}
   .skill-list div{
@@ -947,6 +962,13 @@ I believe good design isn't just about looking great—it's about making people 
           <div><span>Motion &amp; Social</span><span>Templated Kits</span></div>
         </div>
       </div>
+    </div>
+
+    <!-- stats: big figures with a corner mark, no grid lines -->
+    <div class="stats">
+      <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="10">10<span class="lime">+</span></div><p>Years designing brands people remember.</p></div>
+      <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="50">50<span class="lime">+</span></div><p>Pieces of work in this portfolio.</p></div>
+      <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="7">7</div><p>Disciplines, one designer.</p></div>
     </div>
   </section>
 
@@ -2646,6 +2668,30 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   window.addEventListener('scroll', read, { passive: true });
   document.addEventListener('visibilitychange', kick);
   kick();
+})();
+</script>
+<script>
+/* ---------- stats: count up once when they scroll into view ---------- */
+(function(){
+  const nums = [...document.querySelectorAll('.stat-num[data-to]')];
+  if(!nums.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  nums.forEach(el => {
+    const node = el.firstChild;   // the number text; the lime "+" stays put
+    const to = +el.dataset.to;
+    node.textContent = '0';
+    const io = new IntersectionObserver(([e]) => {
+      if(!e.isIntersecting) return;
+      io.disconnect();
+      const t0 = performance.now(), dur = 1300;
+      const step = (now) => {
+        const k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+        node.textContent = String(Math.round(to * ease));
+        if(k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    io.observe(el);
+  });
 })();
 </script>
 </body></html>
