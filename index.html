@@ -727,6 +727,24 @@
     .stat-corner{right:8%;}
     .stat p{font-size:0.98rem;}
   }
+  .skills{margin-top:120px;}
+  .skills-head{position:relative;display:inline-block;padding:14px 26px;font-size:clamp(1.5rem,2.6vw,2.2rem);margin-bottom:34px;}
+  .skills-head .bk{position:absolute;width:18px;height:18px;border:0 solid var(--ink);opacity:0.85;}
+  .bk-tl{top:0;left:0;border-top-width:1.5px !important;border-left-width:1.5px !important;}
+  .bk-br{bottom:0;right:0;border-bottom-width:1.5px !important;border-right-width:1.5px !important;}
+  .skills-label{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:#c8ff50;margin:26px 0 14px;}
+  .skill-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px;}
+  .skill-chip{
+    display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border-radius:999px;
+    font-size:0.98rem;color:var(--ink);background:rgba(10,18,20,0.35);
+    box-shadow:inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+      inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+      inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06);
+    transition:color .25s ease, transform .25s ease;
+  }
+  .skill-chip svg{width:17px;height:17px;flex-shrink:0;opacity:0.85;}
+  .skill-chip:hover{color:#c8ff50;transform:translateY(-2px);}
+  @media(max-width:900px){.skills{margin-top:80px;}.skill-chips{gap:9px;}.skill-chip{padding:9px 14px;font-size:0.88rem;gap:8px;}}
   .brands{margin-top:130px;}
   .brands-intro{max-width:30rem;}
   .brands-intro .tag{font-size:0.72rem;color:var(--ink-soft);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
@@ -1022,14 +1040,6 @@
 I believe good design isn't just about looking great—it's about making people <em class="lime">pay attention</em>, remember your brand, and <em class="lime">take action</em>.</p>
         <div class="signoff">- Presley Jackson</div>
 
-        <div class="skill-list">
-          <div><span>Brand Identity</span><span>Strategy → System</span></div>
-          <div><span>Packaging</span><span>Structure + Print</span></div>
-          <div><span>Editorial</span><span>Layout + Type</span></div>
-          <div><span>Digital / UI</span><span>Product + Web</span></div>
-          <div><span>Illustration</span><span>Custom + Systemic</span></div>
-          <div><span>Motion &amp; Social</span><span>Templated Kits</span></div>
-        </div>
       </div>
     </div>
 
@@ -1039,6 +1049,37 @@ I believe good design isn't just about looking great—it's about making people 
       <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="10">10<span class="lime">+</span></div><p>Years designing brands people remember.</p></div>
       <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="50">50<span class="lime">+</span></div><p>Pieces of work in this portfolio.</p></div>
       <a class="stat stat-link" href="https://www.youtube.com/@6res" target="_blank" rel="noopener" aria-label="70K+ YouTube subscribers, open my channel"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="70">70<span>K</span><span class="lime">+</span></div><p>YouTube subscribers. <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></p></a>
+    </div>
+
+    <!-- skills & tools: bracketed heading over glass chips -->
+    <div class="skills">
+      <h3 class="skills-head"><i class="bk bk-tl"></i><i class="bk bk-br"></i>Skills &amp; Tools</h3>
+      <p class="skills-label mono">Design</p>
+      <ul class="skill-chips">
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="m4 7 8 4 8-4M12 11v10"/></svg><span>Brand Identity</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M8.5 15.5 12 7l3.5 8.5M9.8 12.6h4.4"/></svg><span>Logo Design</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h3l7 4V6L6 10z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg><span>Advertising</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 3 6l2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z"/></svg><span>Merch & Apparel</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M8 7h8M8 17h5"/><circle cx="12" cy="12" r="2.5"/></svg><span>Posters</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>Social Media</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M3 8h18M8 21h8"/></svg><span>Website Design</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></svg><span>Packaging</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg><span>Editorial</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m14 4 6 6-10 10H4v-6z"/><path d="m12 6 6 6"/></svg><span>Illustration</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><span>Typography</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m10 8.5 5 3.5-5 3.5z"/></svg><span>Motion</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Photography</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="13" rx="1"/><path d="M8 21h13V8"/></svg><span>Mockups</span></li>
+      </ul>
+      <p class="skills-label mono">Web</p>
+      <ul class="skill-chips">
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg><span>HTML</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"/></svg><span>CSS</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></svg><span>JavaScript</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771 0-.1611 0-.2383.0112-.0566 0-.1054.0415-.127.0976l-.3378 1.1744c-.1475.5068-.0918.9707.1543 1.3164.2256.3164.6055.498 1.0625.5195l1.8437.1133c.0557 0 .1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527 1.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771 0 .1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803 0-2.6025-2.125-4.727-4.7344-4.727"/></svg><span>Cloudflare</span></li>
+        <li class="skill-chip"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="13" height="10" rx="1"/><rect x="17" y="8" width="5" height="11" rx="1"/><path d="M6 19h5"/></svg><span>Responsive Design</span></li>
+      </ul>
     </div>
 
     <!-- brands worked with: a logo wall without grid lines. Swap a .brand-name for an <img> once a logo file is in -->
