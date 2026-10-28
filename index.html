@@ -171,26 +171,63 @@
     color:var(--ink-soft);writing-mode:vertical-rl;transform:rotate(180deg);
   }
 
+  .mt-label{font:inherit;font-weight:400;}
   .mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
   .mobile-toggle span{display:block;width:20px;height:2px;background:var(--ink);margin:5px 0;}
 
   @media(max-width:900px){
+    /* phones: no bar, just floating glass controls over a soft fade, so the film runs edge to edge */
     .sidebar{
-      width:100%;height:60px;flex-direction:row;padding:0 22px;
-      border-right:none;border-bottom:none;
-      justify-content:space-between;background:rgba(5,13,15,0.92);
+      width:100%;height:auto;flex-direction:row;align-items:center;justify-content:space-between;
+      padding:14px 16px 0;background:none;border:none;pointer-events:none;
     }
-    .side-nav{display:none;flex-direction:column;position:fixed;top:64px;right:16px;
-      background:#000;border:1px solid var(--line);padding:18px 22px;gap:16px;z-index:250;}
-    .side-nav a{writing-mode:horizontal-tb;transform:none;padding:8px 4px;}
-    .side-nav.open{display:flex;}
+    .sidebar::before{
+      content:'';position:fixed;left:0;right:0;top:0;height:92px;z-index:-1;pointer-events:none;
+      background:linear-gradient(to bottom, rgba(5,13,15,0.62), rgba(5,13,15,0.28) 55%, rgba(5,13,15,0));
+    }
+    .sidebar > *{pointer-events:auto;}
+    .sidebar .side-logo{
+      width:44px;height:44px;border-radius:50%;color:#c8ff50;
+      background:rgba(10,18,20,0.82);
+      box-shadow:0 0 8px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08),
+        inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+        inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+        inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06), 0 0 12px rgba(0,0,0,0.15);
+    }
+    .mobile-toggle{
+      display:flex;align-items:center;gap:10px;height:44px;padding:0 20px;border:none;border-radius:999px;cursor:pointer;
+      font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:#c8ff50;
+      background:rgba(10,18,20,0.82);
+      box-shadow:0 0 8px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08),
+        inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+        inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+        inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06), 0 0 12px rgba(0,0,0,0.15);
+    }
+    .mobile-toggle span{display:none;}
+    .side-nav{
+      display:flex;flex-direction:column;align-items:stretch;gap:4px;position:fixed;top:70px;right:16px;left:16px;z-index:250;
+      padding:18px 22px;border-radius:22px;
+      background:rgba(10,18,20,0.82);
+      box-shadow:0 0 8px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08),
+        inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+        inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+        inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06), 0 0 12px rgba(0,0,0,0.15);
+      opacity:0;visibility:hidden;transform:translateY(-8px) scale(0.98);transform-origin:top right;
+      transition:opacity .22s ease, transform .3s cubic-bezier(.2,.8,.2,1), visibility 0s .3s;
+    }
+    .side-nav.open{opacity:1;visibility:visible;transform:none;transition-delay:0s;}
+    .sidebar .side-nav a{
+      writing-mode:horizontal-tb;transform:none;padding:12px 2px;text-shadow:none;color:var(--ink);
+      font-family:'Inter Tight',sans-serif;font-weight:800;font-size:1.9rem;letter-spacing:-0.02em;text-transform:uppercase;
+    }
+    .sidebar .side-nav a::before{display:none;}
+    .sidebar .side-nav a:hover, .sidebar .side-nav a:active{color:#c8ff50;}
     .side-status{display:none;}
-    .mobile-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;}
   }
 
   /* ---------- MAIN OFFSET ---------- */
   .main{margin-left:92px;}
-  @media(max-width:900px){.main{margin-left:0;margin-top:64px;}}
+  @media(max-width:900px){.main{margin-left:0;margin-top:0;}}
 
   /* ---------- PROJECT FOLDERS: glass folder cards (dark / smoked glass) ---------- */
   #work .work-list{display:none;}
@@ -320,7 +357,7 @@
     display:flex;align-items:center;justify-content:center;
     perspective:1200px;transform-style:preserve-3d;
   }
-  @media(max-width:900px){.hero{height:240vh;}.tunnel-stage{--tunnel-top:64px;}}
+  @media(max-width:900px){.hero{height:240vh;}.tunnel-stage{--tunnel-top:0px;}}
   @media(max-width:767px){.tunnel-stage{perspective:900px;}}
 
   .tunnel-title{
@@ -836,9 +873,7 @@
     <span class="pulse"></span>
     <span class="txt">Available</span>
   </div>
-  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="mobile-toggle" id="mobileToggle" aria-expanded="false" aria-controls="sideNav"><span></span><span></span><span></span><b class="mt-label">Menu</b></button>
 </aside>
 
 <div class="main" id="top">
@@ -1715,8 +1750,19 @@ function createMorphGallery(root, { duration = 1500, noiseScale = 3.5, edge = 0.
   // mobile nav toggle
   const toggle = document.getElementById('mobileToggle');
   const sideNav = document.getElementById('sideNav');
-  toggle && toggle.addEventListener('click', () => sideNav.classList.toggle('open'));
-  sideNav && sideNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sideNav.classList.remove('open')));
+  const setMenu = (open) => {
+    if(!toggle || !sideNav) return;
+    sideNav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
+    const label = toggle.querySelector('.mt-label');
+    if(label) label.textContent = open ? 'Close' : 'Menu';
+  };
+  toggle && toggle.addEventListener('click', () => setMenu(!sideNav.classList.contains('open')));
+  sideNav && sideNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') setMenu(false); });
+  document.addEventListener('pointerdown', (e) => {
+    if(sideNav && sideNav.classList.contains('open') && !sideNav.contains(e.target) && !toggle.contains(e.target)) setMenu(false);
+  });
 
   // contact form
   /* ---------- sketchpad ---------- */
