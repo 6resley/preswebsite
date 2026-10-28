@@ -691,7 +691,7 @@
     .stat p{font-size:0.98rem;}
   }
   .brands{margin-top:130px;}
-  .brands-intro{max-width:30rem;margin-left:25%;}
+  .brands-intro{max-width:30rem;}
   .brands-intro .tag{font-size:0.72rem;color:var(--ink-soft);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
   .brands-intro .tag .chip{width:8px;height:8px;flex-shrink:0;}
   .brands-intro p{font-family:'Inter Tight',sans-serif;font-weight:500;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.15;letter-spacing:-0.02em;color:var(--ink);}
@@ -709,13 +709,15 @@
     color:var(--ink);opacity:0.88;transition:color .25s ease, opacity .25s ease;
   }
   .brand:hover .brand-name{color:#c8ff50;opacity:1;}
+  /* a typeset name stands in for a logo: sized to the same visual weight as the marks around it */
+  .brand-name{font-size:2rem;font-style:italic;letter-spacing:-0.03em;opacity:0.9;}
   .brand:hover .brand-logo{color:#c8ff50;opacity:1;transform:scale(1.04);}
   @media(max-width:900px){
     .brands{margin-top:90px;}
     .brands-intro{margin-left:0;}
     .brand-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:40px;}
     .brand{height:84px;}
-    .brand-name{font-size:0.92rem;}
+    .brand-name{font-size:1.6rem;}
     .brand-logo{--s:0.8;}
   }
   .skill-list{margin-top:44px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 40px;}
