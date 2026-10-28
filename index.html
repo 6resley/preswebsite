@@ -690,6 +690,27 @@
     .stat-corner{right:8%;}
     .stat p{font-size:0.98rem;}
   }
+  .brands{margin-top:130px;}
+  .brands-intro{max-width:30rem;margin-left:25%;}
+  .brands-intro .tag{font-size:0.72rem;color:var(--ink-soft);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .brands-intro .tag .chip{width:8px;height:8px;flex-shrink:0;}
+  .brands-intro p{font-family:'Inter Tight',sans-serif;font-weight:500;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1.15;letter-spacing:-0.02em;color:var(--ink);}
+  .brand-grid{list-style:none;margin:70px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}
+  .brand{height:112px;display:flex;align-items:center;justify-content:center;padding:0 12px;text-align:center;}
+  .brand img{max-height:46px;max-width:70%;width:auto;opacity:0.9;transition:opacity .25s ease, transform .25s ease;}
+  .brand-name{
+    font-family:'Inter Tight',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-0.01em;text-transform:uppercase;
+    color:var(--ink);opacity:0.88;transition:color .25s ease, opacity .25s ease;
+  }
+  .brand:hover .brand-name{color:#c8ff50;opacity:1;}
+  .brand:hover img{opacity:1;transform:scale(1.05);}
+  @media(max-width:900px){
+    .brands{margin-top:90px;}
+    .brands-intro{margin-left:0;}
+    .brand-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:40px;}
+    .brand{height:84px;}
+    .brand-name{font-size:0.92rem;}
+  }
   .skill-list{margin-top:44px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 40px;}
   @media(max-width:520px){.skill-list{grid-template-columns:1fr;}}
   .skill-list div{
@@ -975,6 +996,28 @@ I believe good design isn't just about looking great—it's about making people 
       <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="10">10<span class="lime">+</span></div><p>Years designing brands people remember.</p></div>
       <div class="stat"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="50">50<span class="lime">+</span></div><p>Pieces of work in this portfolio.</p></div>
       <a class="stat stat-link" href="https://www.youtube.com/@6res" target="_blank" rel="noopener" aria-label="70K+ YouTube subscribers, open my channel"><i class="stat-corner" aria-hidden="true"></i><div class="stat-num" data-to="70">70<span>K</span><span class="lime">+</span></div><p>YouTube subscribers. <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5"/></svg></p></a>
+    </div>
+
+    <!-- brands worked with: a logo wall without grid lines. Swap a .brand-name for an <img> once a logo file is in -->
+    <div class="brands">
+      <div class="brands-intro">
+        <div class="tag mono"><span class="chip" style="background:#c8ff50;"></span>Brands</div>
+        <p>I've designed for brands across <em class="lime">gaming</em>, <em class="lime">music</em>, <em class="lime">apparel</em> and <em class="lime">audio</em>.</p>
+      </div>
+      <ul class="brand-grid">
+        <li class="brand"><span class="brand-name">G FUEL</span></li>
+        <li class="brand"><span class="brand-name">CTRL</span></li>
+        <li class="brand"><span class="brand-name">FaZe Clan</span></li>
+        <li class="brand"><span class="brand-name">SoaR Gaming</span></li>
+        <li class="brand"><span class="brand-name">John Mayer</span></li>
+        <li class="brand"><span class="brand-name">Era Eternities</span></li>
+        <li class="brand"><span class="brand-name">OBEY Alliance</span></li>
+        <li class="brand"><span class="brand-name">Champion</span></li>
+        <li class="brand"><span class="brand-name">RØDE</span></li>
+        <li class="brand"><span class="brand-name">RIG</span></li>
+        <li class="brand"><span class="brand-name">SteelSeries</span></li>
+        <li class="brand"><span class="brand-name">X-Gamer</span></li>
+      </ul>
     </div>
   </section>
 
