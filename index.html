@@ -349,6 +349,8 @@
 
   /* ---------- HERO: perspective tunnel ---------- */
   .hero{position:relative;height:300vh;padding:0;}
+  /* desktop: the hero runs full-bleed behind the transparent sidebar, so flying cards aren't clipped at its edge */
+  @media(min-width:901px){.hero{margin-left:-92px;}}
   .tunnel-stage{
     --tunnel-top:0px;
     position:sticky;top:var(--tunnel-top);
