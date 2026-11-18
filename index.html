@@ -508,6 +508,54 @@
   .work-hint{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.04em;color:var(--ink-soft);margin-top:12px;text-transform:none;}
 
   section{padding:100px 60px;position:relative;}
+
+  /* ---------- STORE: premade packs, sold through Gumroad's on-page overlay checkout ---------- */
+  .store-grid{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;}
+  @media(max-width:1100px){.store-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:640px){.store-grid{grid-template-columns:minmax(0,1fr);gap:22px;margin-top:40px;}}
+  .store-card{
+    display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:rgba(10,18,20,0.4);
+    box-shadow:inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+      inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+      inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.25);
+    transition:transform .35s ease;
+  }
+  .store-card:hover{transform:translateY(-4px);}
+  .store-media{position:relative;aspect-ratio:16/9;margin:10px 10px 0;border-radius:14px;overflow:hidden;background:#0d1f22;}
+  .store-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+  .store-card:hover .store-media img{transform:scale(1.04);}
+  /* placeholder art until a pack has preview images */
+  .store-media.is-empty{
+    display:flex;align-items:center;justify-content:center;
+    background:
+      repeating-linear-gradient(135deg, rgba(200,255,80,0.07) 0 2px, transparent 2px 14px),
+      radial-gradient(ellipse 70% 80% at 30% 20%, rgba(84,104,104,0.55), rgba(10,26,28,0) 70%), #0d1f22;
+  }
+  .store-ph{font-family:'Inter Tight',sans-serif;font-weight:900;font-size:clamp(1.4rem,2.4vw,1.9rem);letter-spacing:-0.02em;text-transform:uppercase;color:rgba(236,226,212,0.18);}
+  .store-badge{position:absolute;top:10px;left:10px;padding:6px 10px;border-radius:999px;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:#0a1a1c;background:#c8ff50;}
+  .store-body{display:flex;flex-direction:column;gap:12px;padding:20px 22px 22px;flex:1;}
+  .store-kind{font-family:'Space Mono',monospace;font-size:0.64rem;letter-spacing:0.14em;text-transform:uppercase;color:#c8ff50;}
+  .store-name{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:1.35rem;letter-spacing:-0.02em;line-height:1.1;color:var(--ink);}
+  .store-items{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;}
+  .store-items li{font-size:0.78rem;color:var(--ink-soft);padding:5px 10px;border-radius:999px;border:1px solid var(--line);}
+  .store-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:8px;}
+  .store-price{font-family:'Inter Tight',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-0.02em;color:var(--ink);}
+  .store-price small{font-family:'Space Mono',monospace;font-weight:400;font-size:0.62rem;letter-spacing:0.1em;color:var(--ink-soft);margin-right:6px;text-transform:uppercase;}
+  .store-buy{padding:13px 22px;}
+  .store-buy:hover{color:#c8ff50;}
+  .store-buy[aria-disabled="true"]{opacity:0.45;pointer-events:none;}
+  /* custom-work banner spans the whole row under the packs */
+  .store-card.is-custom{grid-column:1 / -1;}
+  .store-card.is-custom .store-body{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px 40px;padding:30px 34px;}
+  .store-card.is-custom .store-kind, .store-card.is-custom .store-name, .store-card.is-custom p{grid-column:1;}
+  .store-card.is-custom .store-foot{grid-column:2;grid-row:1 / span 3;margin:0;padding:0;}
+  .store-card.is-custom .store-name{font-size:clamp(1.5rem,2.4vw,2rem);}
+  .store-card.is-custom p{font-size:0.95rem;line-height:1.6;color:var(--ink-soft);max-width:52ch;}
+  @media(max-width:640px){
+    .store-card.is-custom .store-body{grid-template-columns:minmax(0,1fr);padding:24px 22px;}
+    .store-card.is-custom .store-foot{grid-column:1;grid-row:auto;margin-top:8px;}
+  }
+  .store-note{margin-top:26px;font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.04em;color:var(--ink-soft);opacity:0.75;}
   @media(max-width:900px){section{padding:70px 24px;}}
 
   /* ---------- WORK INDEX LIST ---------- */
@@ -889,6 +937,7 @@
   <a href="#" class="side-logo" aria-label="Home"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/></svg></a>
   <nav class="side-nav" id="sideNav">
     <a href="#work">Work</a>
+    <a href="#store">Store</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -1014,6 +1063,20 @@
       </div>
     </div>
     <div class="folder-grid" id="folderGrid"></div>
+  </section>
+
+  <!-- STORE: cards are rendered from STORE_PRODUCTS in the store script below -->
+  <section id="store">
+    <div class="section-head">
+      <div>
+        <div class="tag mono"><span class="chip" style="background:#c8ff50;"></span>Store</div>
+        <h2>Premade <em class="lime">stream</em> packs.</h2>
+        <p class="work-hint">Instant download. Checkout opens right here.</p>
+      </div>
+      <div class="spec spec-head" aria-hidden="true"><b>Shop 01</b><span>Overlays, alerts, panels</span><span>Ready to drop into OBS</span><span>Secure checkout by Gumroad</span><span>Files delivered by email</span></div>
+    </div>
+    <ul class="store-grid" id="storeGrid"></ul>
+    <p class="store-note">Payments are processed securely by Gumroad. Your download link appears after checkout and is emailed to you.</p>
   </section>
 
   <!-- MARQUEE -->
@@ -1231,6 +1294,7 @@ I believe good design isn't just about looking great—it's about making people 
         <h3>Site</h3>
         <ul>
           <li><a href="#work">Work</a></li>
+          <li><a href="#store">Store</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -1258,6 +1322,52 @@ I believe good design isn't just about looking great—it's about making people 
   </footer>
 
 </div>
+
+<script>
+/* ---------- store ----------
+   Add a pack: copy an entry, paste its Gumroad product link into `url` and a preview image into `img`
+   (a WebP data URI like the project images). An entry with no url shows as "Coming soon".
+   Gumroad's script turns product links into an overlay checkout, so buyers never leave the page. */
+const STORE_PRODUCTS = [
+  { name: 'Stream Pack 01', kind: 'Stream package', price: '', url: '', img: '', badge: 'New',
+    items: ['Overlays', 'Alerts', 'Panels', 'Scenes'] },
+  { name: 'Stream Pack 02', kind: 'Stream package', price: '', url: '', img: '',
+    items: ['Overlays', 'Alerts', 'Panels', 'Scenes'] },
+  { name: 'Stream Pack 03', kind: 'Stream package', price: '', url: '', img: '',
+    items: ['Overlays', 'Alerts', 'Panels', 'Scenes'] },
+];
+(function(){
+  const grid = document.getElementById('storeGrid');
+  if(!grid) return;
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let live = 0;
+  grid.innerHTML = STORE_PRODUCTS.map(p => {
+    const ready = !!p.url;
+    if(ready) live++;
+    const media = p.img
+      ? `<div class="store-media"><img src="${p.img}" alt="${esc(p.name)} preview" loading="lazy">`
+      : `<div class="store-media is-empty"><span class="store-ph">${esc(p.kind)}</span>`;
+    const badge = p.badge ? `<span class="store-badge">${esc(p.badge)}</span>` : '';
+    const price = ready && p.price ? `<span class="store-price"><small>USD</small>${esc(p.price)}</span>` : '<span></span>';
+    const buy = ready
+      ? `<a class="btn store-buy" href="${esc(p.url)}" data-gumroad-overlay-checkout="true">Buy now</a>`
+      : `<a class="btn store-buy" aria-disabled="true" tabindex="-1">Coming soon</a>`;
+    return `<li class="store-card">${media}${badge}</div><div class="store-body"><span class="store-kind">${esc(p.kind)}</span>
+      <h3 class="store-name">${esc(p.name)}</h3><ul class="store-items">${p.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      <div class="store-foot">${price}${buy}</div></div></li>`;
+  }).join('') + `<li class="store-card is-custom"><div class="store-body"><span class="store-kind">Custom work</span>
+      <h3 class="store-name">Need something <em class="lime">made for you</em>?</h3>
+      <p>Steam packages, headers, avatars, intros, motion design and full websites, built from scratch.</p>
+      <div class="store-foot"><a class="btn store-buy" href="#contact">Start a project</a></div></div></li>`;
+  // only load Gumroad's overlay script once at least one pack is for sale
+  if(live){
+    const s = document.createElement('script');
+    s.src = 'https://gumroad.com/js/gumroad.js';
+    s.async = true;
+    document.body.appendChild(s);
+  }
+})();
+</script>
 
 <!-- floating call to action, pinned bottom-left -->
 <a href="#contact" class="btn float-cta" id="floatCta">Start a project</a>
